@@ -1,0 +1,17 @@
+{% extends 'blog/base.html' %}
+{% block title %}My Blog{% endblock %}
+
+{% block content %}
+    <h1> My Blog List </h1>
+    {% for post in posts %}  {# نمایش لیست پست های انتشار شده #}
+            <h2>
+            <a href="{% url 'blog:post_detail' post.id %}"> {# لینک به صفحه جزییات هر پست #}
+                {{ post.title }}
+            </a>
+        </h2>
+        <p class="date"> {# نمایش تاریخ انتشار و نویسنده پست #}
+            Published {{post.publish}} by {{post.author}}
+        </p>
+        {{ post.body|truncatewords:30|linebreaks}} {# نمایش خلاصه‌ای از متن پست (۳۰ کلمه اول) #}
+    {% endfor %}  <!-- بستن حلقه -->
+{% endblock %}

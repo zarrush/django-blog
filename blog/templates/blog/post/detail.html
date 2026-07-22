@@ -1,0 +1,12 @@
+{% extends 'blog/base.html' %}
+{% block  title %} {# عنوان صفحه در مرورگر #}
+    {{ post.title }}
+{% endblock %} 
+
+{% block content %}
+    <h1>{{ post.title }}</h1> {# نمایش عنوان پست #}
+    <p class="date"> {# نمایش تاریخ انتشار و نویسنده پست #}
+        Published {{post.publish}} by {{post.author}}
+    </p>
+    {{ post.body|linebreaks }} {# نمایش متن کامل پست با حفظ شکست خطوط #}
+{% endblock %}
