@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone # استفاده از زمان فعلی پروژه با در نظر گرفتن مکان فعلی
 from django.contrib.auth.models import User # استفاده از مدل پیشفرض جنگو برای ارتباط کاربر و پست
+from django.urls import reverse
 
 class PublishedManager(models.Manager):
     def get_queryset(self):
@@ -15,7 +16,7 @@ class Post(models.Model): # تعریف مدل مربوط به پست های وب
         PUBLISHED = 'PB', 'Published'
 
     title = models.CharField(max_length = 250) # عنوان اصلی پست
-    slug = models.SlugField(max_length = 250) # شناسه مناسب برای استفاده در آدرس صفحات 
+    slug = models.SlugField(max_length = 250,unique_for_date='publish') # شناسه مناسب برای استفاده در آدرس صفحات 
 
     body = models.TextField() # محتوای اصلی پست
     # زمان و تاریخ انتشار پست
@@ -42,3 +43,10 @@ class Post(models.Model): # تعریف مدل مربوط به پست های وب
     # مشخص میکند که هر پست با تایتل خودش نشان داده شود نه با شی object
     def __str__(self):
         return self.title # تایتل خودش
+    def get_absolute_url(self):
+        return reverse('blog:post_detail',
+                            args=[self.publish.year,
+                                    self.publish.month,
+                                    self.publish.day,
+                                    self.slug])
+    
