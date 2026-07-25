@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone # استفاده از زمان فعلی پروژه با در نظر گرفتن مکان فعلی
 from django.contrib.auth.models import User # استفاده از مدل پیشفرض جنگو برای ارتباط کاربر و پست
 from django.urls import reverse
-
+from taggit.managers import TaggableManager
 class PublishedManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset()\
@@ -33,6 +33,7 @@ class Post(models.Model): # تعریف مدل مربوط به پست های وب
                                 default = Status.DRAFT)
     objects = models.Manager() # The default manager
     published = PublishedManager() # our custom manager
+    tags = TaggableManager() # Tags
     # اضافه کردن دش به شکل نزولی
         # تعیین ترتیب پیش‌فرض نمایش پست‌ها بر اساس زمان انتشار
     class Meta:

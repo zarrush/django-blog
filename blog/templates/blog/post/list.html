@@ -1,22 +1,42 @@
-{% extends 'blog/base.html' %} {% block title %}My Blog{% endblock %} {% block
-content %}
-{% block content %}
-<h1 id="main-title">My Blog List</h1>
-{% for post in posts %} {# نمایش لیست پست های انتشار شده #}
-<div class="list-div">
-  <h2 class="list-title">
-    <a href="{{ post.get_absolute_url }}">
-      {# لینک به صفحه جزییات هر پست #} {{ post.title }}
-    </a>
-  </h2>
-</div>
+{% extends "blog/base.html" %}
 
-<p class="date">
-  {# نمایش تاریخ انتشار و نویسنده پست #} Published {{post.publish}} by
-  {{post.author}}
-</p>
-<div class="post-body">{{ post.body|truncatewords:30|linebreaks}}</div>
-{# نمایش خلاصه‌ای از متن پست (۳۰ کلمه اول) #} {% endfor %}
-<!-- بستن حلقه -->
-{% include "pagination.html" with page=page_obj %} 
-{%  endblock %}
+{% block title %}
+    My Blog
+{% endblock %}
+
+{% block content %}
+
+{% if tag %}
+    <h2>Posts tagged with "{{ tag.name }}"</h2>
+{% endif %}
+
+{% for post in posts %}
+
+    <h2 class="post-title">
+        <a href="{{ post.get_absolute_url }}">
+            {{ post.title }}
+        </a>
+    </h2>
+
+    <p class="tags">
+        Tags:
+        {% for tag in post.tags.all %}
+            <a href="{% url 'blog:post_list_by_tag' tag.slug %}">
+                {{ tag.name }}
+            </a>{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+    </p>
+
+    <p class="post-date">
+        Published {{ post.publish }} by {{ post.author }}
+    </p>
+
+    <div class="post-body">
+        {{ post.body|truncatewords:30|linebreaks }}
+    </div>
+
+{% endfor %}
+
+{% include "pagination.html" with page=posts %}
+
+{% endblock %}

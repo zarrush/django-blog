@@ -3,25 +3,4 @@
     margin: 0;
     box-sizing: border-box;
 }
-
-#main-title{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #2b93e2;
-}
-.list-div{
-    margin: 1.5rem;
-    padding: 1rem;
-    background-color: #f6ff0029;
-    border: 0.5px blue solid;
-    border-radius: 4px;
-}
-.list-title{
-    list-style: none;
-    text-decoration: none;
-    color: #00cdcdcc;
-}
-.date{
-    color: #2b93e2;
-}
+/* ---------- Blog List ---------- */
