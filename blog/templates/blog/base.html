@@ -1,16 +1,29 @@
 {% load static %}
+
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+
+    {# Allow child templates to define a custom page title. #}
     <title>{% block title %}{% endblock %}</title>
-    <link href='{% static "css/blog.css" %}' rel="stylesheet" />
+
+    {# Load the global stylesheet shared across the blog. #}
+    <link href="{% static 'css/blog.css' %}" rel="stylesheet" />
   </head>
+
   <body>
-    <div id="content">{% block content %} {% endblock %}</div>
-    <div id="sidebar">
-      <h2>my blog</h2>
-      <p>This is my blog</p>
+
+    {# Main content area overridden by child templates. #}
+    <div id="content">
+      {% block content %}{% endblock %}
     </div>
+
+    {# Persistent sidebar displayed across all blog pages. #}
+    <div id="sidebar">
+      <h2>My Blog</h2>
+      <p>This is my blog.</p>
+    </div>
+
   </body>
 </html>

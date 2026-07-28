@@ -1,14 +1,21 @@
+{# Render the pagination controls for navigating between result pages. #}
 <div class="pagination">
     <span class="step-links">
+
+        {# Display a link to the previous page when available. #}
         {% if posts.has_previous %}
             <a href="?page={{ posts.previous_page_number }}">Previous</a>
         {% endif %}
+
+        {# Show the current page number and the total number of pages. #}
         <span class="current">
-            Page {{ posts.number }} Of {{ posts.paginator.num_pages }}.
+            Page {{ posts.number }} of {{ posts.paginator.num_pages }}.
         </span>
+
+        {# Display a link to the next page when available. #}
         {% if posts.has_next %}
             <a href="?page={{ posts.next_page_number }}">Next</a>
         {% endif %}
-    </span>
 
+    </span>
 </div>

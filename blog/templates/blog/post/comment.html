@@ -4,8 +4,7 @@
 
 {% block content %}
 
-<div class="comment-wrapper">
-
+    {# Display a success message after the comment is submitted successfully. #}
     {% if comment %}
 
         <h2 class="success-title">
@@ -18,10 +17,9 @@
 
     {% else %}
 
-        {% include "blog/post/includes/comment_form.html" %}
+        {# Render the reusable comment form when no comment has been submitted. #}
+        {% include 'blog/post/includes/comment_form.html' %}
 
     {% endif %}
-
-</div>
 
 {% endblock %}

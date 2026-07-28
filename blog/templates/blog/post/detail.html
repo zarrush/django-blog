@@ -1,29 +1,44 @@
 {% extends 'blog/base.html' %}
-{% block  title %} {# عنوان صفحه در مرورگر #}
+
+{# Define the browser page title using the current post title. #}
+{% block title %}
     {{ post.title }}
-{% endblock %} 
+{% endblock %}
 
 {% block content %}
-    <h1>{{ post.title }}</h1> {# نمایش عنوان پست #}
-    <p class="date"> {# نمایش تاریخ انتشار و نویسنده پست #}
-        Published {{post.publish}} by {{post.author}}
+
+    {# Display the selected blog post and its publication details. #}
+    <h1>{{ post.title }}</h1>
+
+    <p class="date">
+        Published {{ post.publish }} by {{ post.author }}
     </p>
-    {{ post.body|linebreaks }} {# نمایش متن کامل پست با حفظ شکست خطوط #}
+
+    {{ post.body|linebreaks }}
+
+    {# Show the total number of approved comments for this post. #}
     {% with comments.count as total_comments %}
         <h2>
-            {{ total_comments }} comment {{ total_comments|pluralize }}
+            {{ total_comments }} comment{{ total_comments|pluralize }}
         </h2>
     {% endwith %}
+
+    {# Render the list of approved comments or display a fallback message. #}
     {% for comment in comments %}
         <div class="comment">
             <p class="info">
                 Comment {{ forloop.counter }} by {{ comment.name }}
                 {{ comment.created }}
             </p>
+
             {{ comment.body|linebreaks }}
         </div>
-        {% empty %}
-            <p> There are no Comments yet! </p>
-        {% endfor %}
+
+    {% empty %}
+        <p>There are no comments yet!</p>
+    {% endfor %}
+
+    {# Embed the reusable comment submission form. #}
     {% include 'blog/post/include/comment_form.html' %}
+
 {% endblock %}
