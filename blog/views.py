@@ -3,6 +3,7 @@ from django.shortcuts import render,get_object_or_404
 from django.views.decorators.http import require_POST
 from django.views.generic import ListView
 from taggit.models import Tag
+from django.db.models import Count
 
 from .forms import CommentForm
 from .models import Post
@@ -51,6 +52,15 @@ def post_detail(request, year, month, day, post):
     # Initialize an empty comment form for new user submissions.
     form = CommentForm()
 
+    # List of similar posts
+    post_tag_ids = post.tags.values_list('id', flat=True)
+
+    similar_posts = (
+        Post.published.filter(tags__in=post_tag_ids)
+        .exclude(id=post.id)
+        .annotate(same_tags=Count('tags'))
+        .order_by('-same_tags', '-publish')[:4]
+)
     # Render the post detail page with the post, approved comments, and comment form.
     return render(
         request, 
@@ -59,6 +69,7 @@ def post_detail(request, year, month, day, post):
             'post': post,
             'comments': comments,
             'form': form,
+            'similar_posts': similar_posts,
         },
 )
 
@@ -86,7 +97,6 @@ def post_comment(request, post_id):
     if form.is_valid():
         # Create the comment instance without saving it to assign the related post.
         comment = form.save(commit=False)
-
         # Associate the comment with the current post before saving.
         comment.post = post
         comment.save()
