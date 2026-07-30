@@ -1,4 +1,5 @@
 {% extends 'blog/base.html' %}
+{% load blog_tags %}
 
 {# Define the browser page title using the current post title. #}
 {% block title %}
@@ -14,7 +15,7 @@
         Published {{ post.publish }} by {{ post.author }}
     </p>
 
-    {{ post.body|linebreaks }}
+    {{ post.body|markdown|linebreaks }}
     <h2>Similar Posts</h2>
     {% for post in similar_posts %}
     <p>
