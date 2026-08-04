@@ -5,7 +5,7 @@ from django.views.generic import ListView
 from taggit.models import Tag
 from django.db.models import Count
 
-from .forms import CommentForm,SearchForm
+from .forms import CommentForm, SearchForm
 from django.contrib.postgres.search import TrigramSimilarity
 
 from .models import Post

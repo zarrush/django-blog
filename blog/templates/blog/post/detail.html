@@ -15,7 +15,7 @@
         Published {{ post.publish }} by {{ post.author }}
     </p>
 
-    {{ post.body|markdown|linebreaks }}
+    {{ post.body|linebreaks }}
     <h2>Similar Posts</h2>
     {% for post in similar_posts %}
     <p>
