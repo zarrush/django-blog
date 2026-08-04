@@ -9,10 +9,7 @@ urlpatterns = [
     # Route requests for a post detail page using its publication date and slug.
     path('<int:year>/<int:month>/<int:day>/<slug:post>/', post_detail, name='post_detail'),
     path('<int:post_id>', post_comment, name='post_comment'),
+    path('search/', post_search, name='post_search')
 ]
-
-
-
-
 
 
