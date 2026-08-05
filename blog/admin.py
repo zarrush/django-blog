@@ -1,5 +1,5 @@
 from django.contrib import admin
-from blog.models import Post, Comment 
+from blog.models import Post, Comment, Category
 
 
 @admin.register(Post)
@@ -18,3 +18,9 @@ class CommentAdmin(admin.ModelAdmin):
     list_filter = ['created', 'updated', 'active']
     search_fields = ['name', 'email', 'body']
     list_editable = ['active']  # toggle comment approval directly from the list view
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ["name", "slug"]
+    prepopulated_fields = {"slug": ("name",)}
+    search_fields = ["name"]

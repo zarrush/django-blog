@@ -6,6 +6,21 @@ from django.urls import reverse
 from taggit.managers import TaggableManager
 
 
+class Category(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    slug = models.SlugField(max_length=100, unique=True)
+
+    class Meta:
+        ordering = ['name']
+        verbose_name = 'Category'
+        verbose_name_plural = 'Categories'
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse('blog:post_by_category', args=[self.slug])      
+
 class Post(models.Model): 
     # Status eligible for publication.
     class Status(models.TextChoices): 
@@ -26,6 +41,7 @@ class Post(models.Model):
     # One-to-many relationship (if the author is deleted, their posts are also deleted)
     author = models.ForeignKey(User, on_delete= models.CASCADE,related_name='blog_posts') 
     status = models.CharField(max_length=2,choices=Status.choices,default=Status.DRAFT)
+    categories = models.ManyToManyField(Category,related_name='posts',blank=True)
     # Managers
     objects = models.Manager() 
     published = PublishedManager() 
