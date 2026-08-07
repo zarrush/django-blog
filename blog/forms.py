@@ -1,15 +1,23 @@
-from django.forms import ModelForm
+"""
+Forms for the blog application.
+
+CommentForm handles user comments; SearchForm handles title search.
+"""
+
 from django import forms
+
 from .models import Comment
 
 
-# Define a ModelForm for creating new blog comments.
 class CommentForm(forms.ModelForm):
+    """Form for submitting a comment on a post."""
+
     class Meta:
-        # Specify the model and expose only the fields required for user input.
         model = Comment
-        fields = ['name', 'email', 'body']
+        fields = ('name', 'email', 'body')
 
 
 class SearchForm(forms.Form):
-    query = forms.CharField()
+    """Simple form for searching posts by title."""
+
+    query = forms.CharField(max_length=100)

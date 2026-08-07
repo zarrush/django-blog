@@ -4,36 +4,42 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    {# Allow child templates to define a custom page title. #}
-    <title>{% block title %}{% endblock %}</title>
-    <a href="{% url 'blog:post_archive' %}">Archive</a>
-    {# Load the global stylesheet shared across the blog. #}
+    {# SEO: every page defines its own title and description. #}
+    <title>{% block title %}{% endblock %} | My Blog</title>
+    <meta name="description"
+          content="{% block description %}A personal blog about Django, Python and modern web development.{% endblock %}" />
+
+    {# Page-specific SEO tags (Open Graph, Twitter cards, canonical). #}
+    {% block seo %}{% endblock %}
+
     <link href="{% static 'css/blog.css' %}" rel="stylesheet" />
   </head>
 
   <body>
+    {# Simple site navigation; will be styled in the UI phase. #}
+    <nav id="main-nav">
+      <a href="{% url 'blog:post_list' %}">Home</a>
+      <a href="{% url 'blog:post_archive' %}">Archive</a>
+    </nav>
 
-    {# Main content area overridden by child templates. #}
     <div id="content">
       {% block content %}{% endblock %}
     </div>
 
-    {# Persistent sidebar displayed across all blog pages. #}
     <div id="sidebar">
       <h2>My Blog</h2>
-      <p>This is my blog.</p>
-      i've written {% total_posts %} posts so far.
-      <h3>latest posts</h3>
+      <p>This is my blog. I've written {% total_posts %} posts so far.</p>
+
+      <h3>Latest posts</h3>
       {% show_latest_posts 3 %}
 
-      <h3>Most commented post</h3>
+      <h3>Most commented posts</h3>
       {% get_most_commented_posts as most_commented_posts %}
       <ul>
         {% for post in most_commented_posts %}
-        <li>
-          <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
-        </li>
+          <li><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></li>
         {% endfor %}
       </ul>
     </div>

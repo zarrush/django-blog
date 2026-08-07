@@ -1,149 +1,131 @@
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import request
-from django.shortcuts import render,get_object_or_404,redirect
+"""
+Views for the blog application.
+
+Handles post listing (with tag/category filters), post detail,
+comments, likes, search, archive and author pages.
+"""
+
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_POST
-from django.views.generic import ListView
-from taggit.models import Tag
+from django.contrib.postgres.search import TrigramSimilarity
+from django.core.paginator import Paginator
 from django.db.models import Count
-from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_POST
+
+from taggit.models import Tag
 
 from .forms import CommentForm, SearchForm
-from django.contrib.postgres.search import TrigramSimilarity
+from .models import Category, Like, Post
 
-from .models import Post,Like
+User = get_user_model()
+
+# Constants
+POSTS_PER_PAGE = 3
+SIMILAR_POSTS_LIMIT = 4
+RELATED_POSTS_LIMIT = 3
+TRIGRAM_THRESHOLD = 0.1
 
 
-def post_list(request,tag_slug=None):
-    # Retrieve all published blog posts as the base queryset.
-    post_list = Post.published.all() 
+def post_list(request, tag_slug=None, category_slug=None):
+    """List published posts, optionally filtered by tag or category."""
+    posts = Post.published.select_related('author').prefetch_related('tags', 'categories')
 
     tag = None
     if tag_slug:
-        # Filter posts by the selected tag when a tag slug is provided.
         tag = get_object_or_404(Tag, slug=tag_slug)
-        post_list = post_list.filter(tags__in=[tag])
+        posts = posts.filter(tags__in=[tag])
 
-    # Split the queryset into pages with three posts per page.
-    paginator = Paginator(post_list, 3)
-    # Read the requested page number from the query string.
+    category = None
+    if category_slug:
+        category = get_object_or_404(Category, slug=category_slug)
+        posts = posts.filter(categories__in=[category])
+
+    paginator = Paginator(posts, POSTS_PER_PAGE)
     page_number = request.GET.get('page', 1)
+    posts = paginator.get_page(page_number)
 
-    try:
-        # Return the requested page of results.
-        posts = paginator.page(page_number)   
-    except PageNotAnInteger:
-        # Gracefully fall back to the first page when an invalid page number is provided.
-        posts = paginator.page(1)
-    except EmptyPage:
-        # Return the last available page when the requested page exceeds the valid range
-        posts = paginator.page(paginator.num_pages)
+    return render(request, 'blog/post/list.html', {
+        'posts': posts,
+        'tag': tag,
+        'category': category,
+    })
 
-    # Render the post listing view with the paginated posts and the active tag filter.
-    return render(request, 'blog/post/list.html', {'posts': posts, 'tag': tag})
 
-# Fetch the requested published post by slug and publication date.
 def post_detail(request, year, month, day, post):
+    """Show a published post with comments, similar and related posts."""
     post = get_object_or_404(
-        Post, 
+        Post,
         status=Post.Status.PUBLISHED,
         slug=post,
         publish__year=year,
         publish__month=month,
         publish__day=day,
-)
-    # Retrieve only the approved comments associated with the current post.
+    )
     comments = post.comments.filter(active=True)
-    # Initialize an empty comment form for new user submissions.
     form = CommentForm()
 
-    # List of similar posts
+    # Posts sharing the most tags with the current one.
     post_tag_ids = post.tags.values_list('id', flat=True)
-
     similar_posts = (
         Post.published.filter(tags__in=post_tag_ids)
         .exclude(id=post.id)
         .annotate(same_tags=Count('tags'))
-        .order_by('-same_tags', '-publish')[:4]
-)
-    related_posts = Post.published.filter(
-        categories__in=post.categories.all()
-    ).exclude(
-        id=post.id
-    ).order_by(
-        "-publish"
-    )[:3]
+        .order_by('-same_tags', '-publish')[:SIMILAR_POSTS_LIMIT]
+    )
+    # Posts from the same categories.
+    related_posts = (
+        Post.published.filter(categories__in=post.categories.all())
+        .exclude(id=post.id)
+        .order_by('-publish')[:RELATED_POSTS_LIMIT]
+    )
     liked = request.user.is_authenticated and post.likes.filter(user=request.user).exists()
-    # Render the post detail page with the post, approved comments, and comment form.
-    return render(
-        request, 
-        'blog/post/detail.html',
-        {
-            'post': post,
-            'comments': comments,
-            'form': form,
-            'similar_posts': similar_posts,
-            'related-posts': related_posts,
-            'liked': liked,
-        },
-)
 
-# Display a paginated list of published blog posts using Django's generic ListView.
-class PostListView(ListView):
-    queryset = Post.published.all()
-    context_object_name = 'posts'
-    paginate_by = 3
-    template_name = 'blog/post/list.html'
+    return render(request, 'blog/post/detail.html', {
+        'post': post,
+        'comments': comments,
+        'form': form,
+        'similar_posts': similar_posts,
+        'related_posts': related_posts,
+        'liked': liked,
+    })
+
 
 @login_required
 @require_POST
 def post_like(request, post_id):
+    """Toggle a like on a post for the logged-in user."""
     post = get_object_or_404(Post, id=post_id)
     like, created = Like.objects.get_or_create(user=request.user, post=post)
-
     if not created:
         like.delete()
+    return redirect(post.get_absolute_url())
 
-    # 👇 حالا با پارامترهای درست ریدایرکت می‌کنیم
-    return redirect('blog:post_detail',
-                    year=post.publish.year,
-                    month=post.publish.month,
-                    day=post.publish.day,
-                    post=post.slug)
 
 @require_POST
 def post_comment(request, post_id):
-    # Retrieve the target published post or return a 404 response if it does not exist.
-    post = get_object_or_404(
-        Post,
-        id=post_id,
-        status=Post.Status.PUBLISHED,
-    )
+    """Handle a new comment submission on a published post."""
+    post = get_object_or_404(Post, id=post_id, status=Post.Status.PUBLISHED)
 
-    # Initialize the comment object and bind the submitted form data.
     comment = None
     form = CommentForm(data=request.POST)
 
-    # Validate and persist the submitted comment.
     if form.is_valid():
-        # Create the comment instance without saving it to assign the related post.
         comment = form.save(commit=False)
-        # Associate the comment with the current post before saving.
         comment.post = post
         comment.save()
+        return render(request, 'blog/post/comment.html', {
+            'post': post,
+            'form': form,
+            'comment': comment,
+        })
 
-        # Render the confirmation page with the saved comment and related context.
-        return render(
-            request,
-            'blog/post/comment.html',
-            {
-                'post': post,
-                'form': form,
-                'comment': comment,
-            },
-        )
+    # Invalid submissions fall back to the post page.
+    return redirect(post.get_absolute_url())
+
 
 def post_search(request):
+    """Search published posts by title using trigram similarity."""
     form = SearchForm()
     query = None
     results = []
@@ -152,36 +134,41 @@ def post_search(request):
         form = SearchForm(request.GET)
         if form.is_valid():
             query = form.cleaned_data['query']
-            results = Post.published.annotate(
-                similarity=TrigramSimilarity('title', query),
-            ).filter(similarity__gt=0.1).order_by('-similarity')
-    return render(request,
-                    'blog/post/search.html',
-                    {'form': form,
-                    'query': query,
-                    'results': results})
+            results = (
+                Post.published.annotate(
+                    similarity=TrigramSimilarity('title', query),
+                )
+                .filter(similarity__gt=TRIGRAM_THRESHOLD)
+                .order_by('-similarity')
+            )
 
-def post_archive(request):
-    months = Post.published.dates('publish', 'month', order='DESC')
-
-    archive = []
-    for month_date in months:
-        posts = Post.published.filter(
-            publish__year=month_date.year,
-            publish__month=month_date.month
-        )
-        archive.append({
-            'period': month_date,
-            'posts': posts,
-        })
-
-    return render(request, 'blog/post/archive.html', {
-        'archive': archive,
+    return render(request, 'blog/post/search.html', {
+        'form': form,
+        'query': query,
+        'results': results,
     })
 
+
+def post_archive(request):
+    """Group published posts by month, newest first."""
+    months = Post.published.dates('publish', 'month', order='DESC')
+    archive = [
+        {
+            'period': month_date,
+            'posts': Post.published.filter(
+                publish__year=month_date.year,
+                publish__month=month_date.month,
+            ),
+        }
+        for month_date in months
+    ]
+    return render(request, 'blog/post/archive.html', {'archive': archive})
+
+
 def author_page(request, username):
+    """Show an author's profile info and their published posts."""
     author = get_object_or_404(User, username=username)
-    posts = Post.published.filter(author=author).order_by('-publish')
+    posts = Post.published.filter(author=author)
 
     return render(request, 'blog/author.html', {
         'author': author,

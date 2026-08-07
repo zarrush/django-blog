@@ -1,22 +1,27 @@
 {% extends "blog/base.html" %}
 
 {% block title %}{{ author.username }} — Author{% endblock %}
+{% block description %}Posts written by {{ author.username }} on My Blog.{% endblock %}
 
 {% block content %}
-  <h1>{{ author.get_full_name|default:author.username }}</h1>
-  
-  {% if author.profile.avatar %}
-  <img src="{{ author.profile.avatar.url }}" alt="{{ author.username }}"
-      width="120" style="border-radius: 50%;">
-{% endif %}
+  <header class="author-header">
+    <h1>{{ author.get_full_name|default:author.username }}</h1>
 
-{% if author.profile.bio %}
-  <p>{{ author.profile.bio }}</p>
-{% endif %}
-  <p>
-    Member since {{ author.date_joined|date:"M Y" }} ·
-    {{ total_posts }} posts · {{ total_likes }} likes
-  </p>
+    {% if author.profile.avatar %}
+      <img class="avatar" src="{{ author.profile.avatar.url }}"
+           alt="Profile photo of {{ author.username }}" width="120">
+    {% endif %}
+
+    {% if author.profile.bio %}
+      <p class="author-bio">{{ author.profile.bio }}</p>
+    {% endif %}
+
+    <p class="author-meta">
+      Member since {{ author.date_joined|date:"M Y" }} ·
+      {{ total_posts }} post{{ total_posts|pluralize }} ·
+      {{ total_likes }} like{{ total_likes|pluralize }}
+    </p>
+  </header>
 
   <h2>Posts by {{ author.username }}</h2>
   <ul>

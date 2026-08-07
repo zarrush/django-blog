@@ -4,3 +4,5 @@
     box-sizing: border-box;
 }
 /* ---------- Blog List ---------- */
+.like-form { display: inline; }
+.avatar { border-radius: 50%; }

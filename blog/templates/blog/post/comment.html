@@ -1,25 +1,12 @@
-{% extends 'blog/base.html' %}
+{% extends "blog/base.html" %}
 
-{% block title %}Add Comment{% endblock %}
+{% block title %}{% if comment %}Comment added{% else %}Add Comment{% endif %}{% endblock %}
 
 {% block content %}
-
-    {# Display a success message after the comment is submitted successfully. #}
     {% if comment %}
-
-        <h2 class="success-title">
-            🎉 Your comment has been added.
-        </h2>
-
-        <a class="back-link" href="{{ post.get_absolute_url }}">
-            ← Back to the post
-        </a>
-
+        <h1 class="success-title">🎉 Your comment has been added.</h1>
+        <a class="back-link" href="{{ post.get_absolute_url }}">← Back to the post</a>
     {% else %}
-
-        {# Render the reusable comment form when no comment has been submitted. #}
-        {% include 'blog/post/includes/comment_form.html' %}
-
+        {% include "blog/post/includes/comment_form.html" %}
     {% endif %}
-
 {% endblock %}

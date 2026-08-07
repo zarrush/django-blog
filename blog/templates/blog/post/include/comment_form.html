@@ -4,9 +4,6 @@
     <form action="{% url 'blog:post_comment' post.id %}" method="post">
         {{ form.as_p }}
         {% csrf_token %}
-
-        <button type="submit" class="comment-btn">
-            Add Comment
-        </button>
+        <button type="submit" class="comment-btn">Add Comment</button>
     </form>
 </div>

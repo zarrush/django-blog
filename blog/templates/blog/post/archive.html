@@ -1,21 +1,26 @@
 {% extends "blog/base.html" %}
 
 {% block title %}Archive{% endblock %}
+{% block description %}Browse all My Blog posts by month.{% endblock %}
 
 {% block content %}
   <h1>Archive</h1>
   <p>Browse all posts by month.</p>
 
   {% for group in archive %}
-    <h2>{{ group.period|date:"F Y" }}</h2>
-    <ul>
-      {% for post in group.posts %}
-        <li>
-          <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
-          <small>— {{ post.publish|date:"M j, Y" }} by {{ post.author.username }}</small>
-        </li>
-      {% endfor %}
-    </ul>
+    <section class="archive-month">
+      <h2>{{ group.period|date:"F Y" }}</h2>
+      <ul>
+        {% for post in group.posts %}
+          <li>
+            <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+            <small>— {{ post.publish|date:"M j, Y" }} by
+              <a href="{% url 'blog:author_page' post.author.username %}">{{ post.author.username }}</a>
+            </small>
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
   {% empty %}
     <p>No posts yet.</p>
   {% endfor %}

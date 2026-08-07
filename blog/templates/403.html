@@ -1,18 +1,13 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <title>Permission Denied</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Access Denied</title>
 </head>
-
 <body>
-    <h1>403 - Permission Denied</h1>
-        <p>
-            You don't have permission to access this page.
-        </p>
-        <a href="/">
-            Back to Home
-        </a>
+    <h1>403 — Access Denied</h1>
+    <p>You don't have permission to view this page.</p>
+    <a href="{% url 'blog:post_list' %}">Back to Home</a>
 </body>
-
-</html> 
+</html>

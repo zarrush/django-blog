@@ -1,19 +1,13 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Server Error</title>
 </head>
-
 <body>
-    <h1>500 - Server Error</h1>
-        <p>
-            Something went wrong on our server.
-            Please try again later.
-        </p>
-        <a href="/">
-            Back to Home
-        </a>
+    <h1>500 — Server Error</h1>
+    <p>Something went wrong on our side. Please try again later.</p>
+    <a href="{% url 'blog:post_list' %}">Back to Home</a>
 </body>
-
 </html>

@@ -1,18 +1,13 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Bad Request</title>
 </head>
-
 <body>
-    <h1>400 - Bad Request</h1>
-        <p>
-        Your request was invalid.
-        </p>
-        <a href="/">
-            Back to Home
-        </a>
+    <h1>400 — Bad Request</h1>
+    <p>Your request was invalid.</p>
+    <a href="{% url 'blog:post_list' %}">Back to Home</a>
 </body>
-
 </html>
