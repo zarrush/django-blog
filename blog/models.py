@@ -19,7 +19,7 @@ class Category(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('blog:post_by_category', args=[self.slug])      
+        return reverse('blog:post_detail', args=[self.id, self.slug])  
 
 class Post(models.Model): 
     # Status eligible for publication.
@@ -45,6 +45,7 @@ class Post(models.Model):
     # Managers
     objects = models.Manager() 
     published = PublishedManager() 
+    categories = models.ManyToManyField(Category, related_name='posts', blank=True)
     tags = TaggableManager() # Tagging
 
     class Meta:
@@ -58,7 +59,6 @@ class Post(models.Model):
     def __str__(self):
         return self.title 
 
-    
     def get_absolute_url(self):
         # Generate the canonical URL for this post using its publication date and slug.
         return reverse(
@@ -70,6 +70,19 @@ class Post(models.Model):
                 self.slug
             ],
 )
+class Like(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='likes')
+    post= models.ForeignKey(Post, on_delete=models.CASCADE, related_name='likes')
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'post'], name='unique_like')
+        ]
+        ordering = ('-created',)
+
+    def __str__(self):
+        return f'{self.user} → {self.post}'
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete= models.CASCADE, related_name= 'comments')

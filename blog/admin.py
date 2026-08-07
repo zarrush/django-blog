@@ -1,5 +1,5 @@
 from django.contrib import admin
-from blog.models import Post, Comment, Category
+from blog.models import Like, Post, Comment, Category
 
 
 @admin.register(Post)
@@ -24,3 +24,9 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = ["name", "slug"]
     prepopulated_fields = {"slug": ("name",)}
     search_fields = ["name"]
+
+@admin.register(Like)
+class LikeAdmin(admin.ModelAdmin):
+    list_display = ('user', 'post', 'created')
+    list_filter = ('created',)
+    search_fields = ('user__username', 'post__title')

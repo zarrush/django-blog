@@ -1,7 +1,6 @@
 {% extends 'blog/base.html' %}
 {% load blog_tags %}
 
-{# Define the browser page title using the current post title. #}
 {% block title %}
     {{ post.title }}
 {% endblock %}
@@ -10,29 +9,49 @@
 
     {# Display the selected blog post and its publication details. #}
     <h1>{{ post.title }}</h1>
-
+    {% for category in post.categories.all %}
+        <span class="badge bg-secondary">
+            {{ category.name }}
+        </span>
+    {% endfor %}
     <p class="date">
         Published {{ post.publish }} by {{ post.author }}
     </p>
 
+    <p>{{ post.body|reading_time }}</p>
+
     {{ post.body|linebreaks }}
+    
+    {% if user.is_authenticated %}
+  <form action="{% url 'blog:post_like' post.id %}" method="post" style="display:inline;">
+    {% csrf_token %}
+    {% if liked %}
+      <button type="submit">❤️ Unlike ({{ post.likes.count }})</button>
+    {% else %}
+      <button type="submit">🤍 Like ({{ post.likes.count }})</button>
+    {% endif %}
+  </form>
+{% else %}
+  <p><a href="{% url 'login' %}">Log in</a> to like this post. ({{ post.likes.count }} likes)</p>
+{% endif %}
     <h2>Similar Posts</h2>
-    {% for post in similar_posts %}
-    <p>
-        <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
-    </p>
+
+    {% for similar_post in similar_posts %}
+        <p>
+            <a href="{{ similar_post.get_absolute_url }}">
+                {{ similar_post.title }}
+            </a>
+        </p>
     {% empty %}
-    There are no similar posts yet!
+        <p>There are no similar posts yet!</p>
     {% endfor %}
 
-    {# Show the total number of approved comments for this post. #}
     {% with comments.count as total_comments %}
         <h2>
-            {{ total_comments }} comment {{ total_comments|pluralize }}
+            {{ total_comments }} comment{{ total_comments|pluralize }}
         </h2>
     {% endwith %}
 
-    {# Render the list of approved comments or display a fallback message. #}
     {% for comment in comments %}
         <div class="comment">
             <p class="info">
@@ -42,12 +61,25 @@
 
             {{ comment.body|linebreaks }}
         </div>
-
     {% empty %}
         <p>There are no comments yet!</p>
     {% endfor %}
+    {% if related_posts %}
 
-    {# Embed the reusable comment submission form. #}
-    {% include 'blog/post/include/comment_form.html' %}
+<h2>Related Posts</h2>
+
+<ul>
+    {% for post in related_posts %}
+        <li>
+            <a href="{{ post.get_absolute_url }}">
+                {{ post.title }}
+            </a>
+        </li>
+    {% endfor %}
+</ul>
+
+{% endif %}
+
+    {% include "blog/post/include/comment_form.html" %}
 
 {% endblock %}

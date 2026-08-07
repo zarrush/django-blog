@@ -1,5 +1,7 @@
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.shortcuts import render,get_object_or_404
+from django.http import request
+from django.shortcuts import render,get_object_or_404,redirect
+from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.views.generic import ListView
 from taggit.models import Tag
@@ -8,7 +10,7 @@ from django.db.models import Count
 from .forms import CommentForm, SearchForm
 from django.contrib.postgres.search import TrigramSimilarity
 
-from .models import Post
+from .models import Post,Like
 
 
 def post_list(request,tag_slug=None):
@@ -63,6 +65,14 @@ def post_detail(request, year, month, day, post):
         .annotate(same_tags=Count('tags'))
         .order_by('-same_tags', '-publish')[:4]
 )
+    related_posts = Post.published.filter(
+        categories__in=post.categories.all()
+    ).exclude(
+        id=post.id
+    ).order_by(
+        "-publish"
+    )[:3]
+    liked = request.user.is_authenticated and post.likes.filter(user=request.user).exists()
     # Render the post detail page with the post, approved comments, and comment form.
     return render(
         request, 
@@ -72,6 +82,8 @@ def post_detail(request, year, month, day, post):
             'comments': comments,
             'form': form,
             'similar_posts': similar_posts,
+            'related-posts': related_posts,
+            'liked': liked,
         },
 )
 
@@ -81,6 +93,22 @@ class PostListView(ListView):
     context_object_name = 'posts'
     paginate_by = 3
     template_name = 'blog/post/list.html'
+
+@login_required
+@require_POST
+def post_like(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    like, created = Like.objects.get_or_create(user=request.user, post=post)
+
+    if not created:
+        like.delete()
+
+    # 👇 حالا با پارامترهای درست ریدایرکت می‌کنیم
+    return redirect('blog:post_detail',
+                    year=post.publish.year,
+                    month=post.publish.month,
+                    day=post.publish.day,
+                    post=post.slug)
 
 @require_POST
 def post_comment(request, post_id):
