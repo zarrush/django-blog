@@ -159,3 +159,21 @@ def post_search(request):
                     {'form': form,
                     'query': query,
                     'results': results})
+
+def post_archive(request):
+    months = Post.published.dates('publish', 'month', order='DESC')
+
+    archive = []
+    for month_date in months:
+        posts = Post.published.filter(
+            publish__year=month_date.year,
+            publish__month=month_date.month
+        )
+        archive.append({
+            'period': month_date,
+            'posts': posts,
+        })
+
+    return render(request, 'blog/post/archive.html', {
+        'archive': archive,
+    })

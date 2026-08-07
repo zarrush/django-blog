@@ -7,7 +7,7 @@
 
     {# Allow child templates to define a custom page title. #}
     <title>{% block title %}{% endblock %}</title>
-
+    <a href="{% url 'blog:post_archive' %}">Archive</a>
     {# Load the global stylesheet shared across the blog. #}
     <link href="{% static 'css/blog.css' %}" rel="stylesheet" />
   </head>

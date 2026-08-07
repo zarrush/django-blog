@@ -12,6 +12,7 @@ urlpatterns = [
     path('<int:post_id>', post_comment, name='post_comment'),
     path('search/', post_search, name='post_search'),
     path('<int:post_id>/like/', post_like, name='post_like'),
+    path('archive/', post_archive, name='post_archive'),
 ]
 
 
