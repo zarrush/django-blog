@@ -1,5 +1,8 @@
 from django.contrib import admin
 from blog.models import Like, Post, Comment, Category
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.models import User as AuthUser
+from .models import Profile
 
 
 @admin.register(Post)
@@ -30,3 +33,15 @@ class LikeAdmin(admin.ModelAdmin):
     list_display = ('user', 'post', 'created')
     list_filter = ('created',)
     search_fields = ('user__username', 'post__title')
+
+
+class ProfileInline(admin.StackedInline):
+    model = Profile
+    can_delete = False
+    verbose_name_plural = 'Profile'
+
+class UserAdmin(BaseUserAdmin):
+    inlines = (ProfileInline,)
+
+admin.site.unregister(AuthUser)
+admin.site.register(AuthUser, UserAdmin)

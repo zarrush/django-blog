@@ -4,6 +4,15 @@
 
 {% block content %}
   <h1>{{ author.get_full_name|default:author.username }}</h1>
+  
+  {% if author.profile.avatar %}
+  <img src="{{ author.profile.avatar.url }}" alt="{{ author.username }}"
+      width="120" style="border-radius: 50%;">
+{% endif %}
+
+{% if author.profile.bio %}
+  <p>{{ author.profile.bio }}</p>
+{% endif %}
   <p>
     Member since {{ author.date_joined|date:"M Y" }} ·
     {{ total_posts }} posts · {{ total_likes }} likes
