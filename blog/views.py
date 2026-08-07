@@ -6,6 +6,7 @@ from django.views.decorators.http import require_POST
 from django.views.generic import ListView
 from taggit.models import Tag
 from django.db.models import Count
+from django.contrib.auth.models import User
 
 from .forms import CommentForm, SearchForm
 from django.contrib.postgres.search import TrigramSimilarity
@@ -176,4 +177,15 @@ def post_archive(request):
 
     return render(request, 'blog/post/archive.html', {
         'archive': archive,
+    })
+
+def author_page(request, username):
+    author = get_object_or_404(User, username=username)
+    posts = Post.published.filter(author=author).order_by('-publish')
+
+    return render(request, 'blog/author.html', {
+        'author': author,
+        'posts': posts,
+        'total_posts': posts.count(),
+        'total_likes': Like.objects.filter(post__author=author).count(),
     })

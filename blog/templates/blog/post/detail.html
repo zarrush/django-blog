@@ -15,7 +15,7 @@
         </span>
     {% endfor %}
     <p class="date">
-        Published {{ post.publish }} by {{ post.author }}
+        Published {{ post.publish }} by by <a href="{% url 'blog:author_page' post.author.username %}">{{ post.author.username }}</a>
     </p>
 
     <p>{{ post.body|reading_time }}</p>

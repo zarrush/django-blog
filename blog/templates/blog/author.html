@@ -1,0 +1,23 @@
+{% extends "blog/base.html" %}
+
+{% block title %}{{ author.username }} — Author{% endblock %}
+
+{% block content %}
+  <h1>{{ author.get_full_name|default:author.username }}</h1>
+  <p>
+    Member since {{ author.date_joined|date:"M Y" }} ·
+    {{ total_posts }} posts · {{ total_likes }} likes
+  </p>
+
+  <h2>Posts by {{ author.username }}</h2>
+  <ul>
+    {% for post in posts %}
+      <li>
+        <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+        <small>— {{ post.publish|date:"M j, Y" }}</small>
+      </li>
+    {% empty %}
+      <p>No posts yet.</p>
+    {% endfor %}
+  </ul>
+{% endblock %}
