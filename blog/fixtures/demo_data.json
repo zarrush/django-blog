@@ -240,7 +240,7 @@
   "fields": {
     "title": "Python Type Hints: Writing Self-Documenting Code",
     "slug": "python-type-hints-writing-self-documenting-code",
-    "body": "Type hints don't make Python faster � they make it clearer. They are documentation that never lies, because your tools can check it for you.\r\nWhen a function declares its inputs and outputs, any reader instantly knows how to use it without opening the body. That alone removes a whole category of \"what does this return?\" comments.\r\nThe biggest win is being honest about missing values. If a lookup can fail, declare that it returns Post or None. This single hint forces every caller to handle the empty case, and silently kills a whole class of AttributeError bugs.\r\nIn Django projects, type hints shine the most in service modules and utility functions, where the business logic lives. Combine them with mypy in your CI pipeline and you catch bugs before a single test runs.\r\nYou don't need 100% coverage to get 80% of the value. Start by hinting your most-used helpers, and let the habit grow from there.",
+    "body": "Type hints don't make Python faster — they make it clearer. They are documentation that never lies, because your tools can check it for you.\r\nWhen a function declares its inputs and outputs, any reader instantly knows how to use it without opening the body. That alone removes a whole category of \"what does this return?\" comments.\r\nThe biggest win is being honest about missing values. If a lookup can fail, declare that it returns Post or None. This single hint forces every caller to handle the empty case, and silently kills a whole class of AttributeError bugs.\r\nIn Django projects, type hints shine the most in service modules and utility functions, where the business logic lives. Combine them with mypy in your CI pipeline and you catch bugs before a single test runs.\r\nYou don't need 100% coverage to get 80% of the value. Start by hinting your most-used helpers, and let the habit grow from there.",
     "publish": "2026-08-03T23:34:50Z",
     "created": "2026-08-07T23:35:54.315Z",
     "updated": "2026-08-07T23:38:09.123Z",
@@ -257,7 +257,7 @@
   "fields": {
     "title": "PostgreSQL Indexing Strategies for Faster Django Queries",
     "slug": "postgresql-indexing-strategies-for-faster-django-queries",
-    "body": "A query that feels fast on 100 rows can crawl on a million. The difference is usually an index, and knowing what to index is the real skill.\r\nThe rule of thumb: index the columns you filter, sort and join by � the WHERE, ORDER BY and foreign key columns. Our Post model already indexes publish for exactly this reason.\r\nBefore adding indexes, measure. Run EXPLAIN ANALYZE on your slow query; if you see a Seq Scan on a large table, that's your cue.\r\nThree strategies pay off quickly. First, composite indexes that match your query shape � order matters, so build them in the same order you filter. Second, partial indexes for hot subsets, like indexing only published posts; Django supports this with the condition argument on models.Index. Third, trigram indexes for fuzzy text search � this is exactly what powers the search page on this blog.\r\nRemember that every index slows writes slightly. Index with intent, measure with EXPLAIN, and let real queries � not guesses � drive your decisions.",
+    "body": "A query that feels fast on 100 rows can crawl on a million. The difference is usually an index, and knowing what to index is the real skill.\r\nThe rule of thumb: index the columns you filter, sort and join by — the WHERE, ORDER BY and foreign key columns. Our Post model already indexes publish for exactly this reason.\r\nBefore adding indexes, measure. Run EXPLAIN ANALYZE on your slow query; if you see a Seq Scan on a large table, that's your cue.\r\nThree strategies pay off quickly. First, composite indexes that match your query shape — order matters, so build them in the same order you filter. Second, partial indexes for hot subsets, like indexing only published posts; Django supports this with the condition argument on models.Index. Third, trigram indexes for fuzzy text search — this is exactly what powers the search page on this blog.\r\nRemember that every index slows writes slightly. Index with intent, measure with EXPLAIN, and let real queries — not guesses — drive your decisions.",
     "publish": "2026-08-08T23:36:11Z",
     "created": "2026-08-07T23:37:12.940Z",
     "updated": "2026-08-07T23:40:20.768Z",
@@ -291,7 +291,7 @@
   "fields": {
     "title": "SOLID Principles in Python: A Practical Guide",
     "slug": "solid-principles-in-python-a-practical-guide",
-    "body": "SOLID sounds academic until you meet code that violates it. These five principles are really one idea wearing different hats: each piece of your code should have a single reason to change.\r\nSingle Responsibility is the easiest to apply in Django. A view that fetches data, validates business rules, sends an email and renders a template has four reasons to change. Move the business rules into a service function and the view becomes thin and obvious.\r\nOpen/Closed and Liskov show up whenever you rely on polymorphism: a new payment provider should be addable without touching the old ones, and every implementation must honor the same contract. Python's duck typing makes this natural � describe the behavior you expect and let any object satisfy it.\r\nDependency Inversion is the principle that changes how you test. If a function imports the SMTP client directly, you can't test it without sending email. If it receives a sender object instead, your tests pass in a fake. That single inversion turns untestable code into testable code.\r\nYou don't need all five principles everywhere. Use them as a smell detector: when a change feels painful, one of them is usually being violated nearby.",
+    "body": "SOLID sounds academic until you meet code that violates it. These five principles are really one idea wearing different hats: each piece of your code should have a single reason to change.\r\nSingle Responsibility is the easiest to apply in Django. A view that fetches data, validates business rules, sends an email and renders a template has four reasons to change. Move the business rules into a service function and the view becomes thin and obvious.\r\nOpen/Closed and Liskov show up whenever you rely on polymorphism: a new payment provider should be addable without touching the old ones, and every implementation must honor the same contract. Python's duck typing makes this natural — describe the behavior you expect and let any object satisfy it.\r\nDependency Inversion is the principle that changes how you test. If a function imports the SMTP client directly, you can't test it without sending email. If it receives a sender object instead, your tests pass in a fake. That single inversion turns untestable code into testable code.\r\nYou don't need all five principles everywhere. Use them as a smell detector: when a change feels painful, one of them is usually being violated nearby.",
     "publish": "2026-08-10T23:43:10Z",
     "created": "2026-08-07T23:44:18.809Z",
     "updated": "2026-08-07T23:44:18.809Z",
@@ -308,7 +308,7 @@
   "fields": {
     "title": "Writing Meaningful Git Commit Messages",
     "slug": "writing-meaningful-git-commit-messages",
-    "body": "Open the history of any mature project and you can read it like a story. Open a messy one and you see \"fix\", \"update\", \"wip\". The difference isn't talent � it's habit.\r\nA good commit message starts with a short imperative subject: \"Add category filter to post list\", not \"added some stuff\". The imperative mood reads like an instruction: applying this commit will do X.\r\nThe body is where the real value lives. Explain why the change was made, not what changed � the diff already shows the what. A reviewer six months from now (and that reviewer will be you) needs the context: the bug, the constraint, the alternative you rejected.\r\nKeep commits small and focused. One commit per feature, fix or refactor. When you mix a rename and a behavior change in a single commit, neither can be reverted cleanly.\r\nConventions like Conventional Commits (feat:, fix:, docs:) give your history a consistent rhythm and even make automatic changelogs possible. You don't need to adopt the whole spec � stealing its discipline is already worth it.\r\nYour commit history is a letter to the next developer. Write it like someone will actually read it, because someone will.",
+    "body": "Open the history of any mature project and you can read it like a story. Open a messy one and you see \"fix\", \"update\", \"wip\". The difference isn't talent — it's habit.\r\nA good commit message starts with a short imperative subject: \"Add category filter to post list\", not \"added some stuff\". The imperative mood reads like an instruction: applying this commit will do X.\r\nThe body is where the real value lives. Explain why the change was made, not what changed — the diff already shows the what. A reviewer six months from now (and that reviewer will be you) needs the context: the bug, the constraint, the alternative you rejected.\r\nKeep commits small and focused. One commit per feature, fix or refactor. When you mix a rename and a behavior change in a single commit, neither can be reverted cleanly.\r\nConventions like Conventional Commits (feat:, fix:, docs:) give your history a consistent rhythm and even make automatic changelogs possible. You don't need to adopt the whole spec — stealing its discipline is already worth it.\r\nYour commit history is a letter to the next developer. Write it like someone will actually read it, because someone will.",
     "publish": "2026-08-11T23:44:54Z",
     "created": "2026-08-07T23:45:48.172Z",
     "updated": "2026-08-07T23:45:48.172Z",
@@ -722,4 +722,371 @@
     "post": 11,
     "name": "Jordan Lee",
     "email": "jordan.lee@example.com",
-    "body": 
+    "body": "The timing decorator example is gold. Added it to my project yesterday and immediately found an 800ms view 😅",
+    "created": "2026-08-07T23:54:36.915Z",
+    "updated": "2026-08-07T23:54:36.915Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 36,
+  "fields": {
+    "post": 11,
+    "name": "Priya Sharma",
+    "email": "priya.sharma@example.com",
+    "body": "Finally someone explains functools.wraps properly. I skipped it for months and wondered why my docs looked weird.",
+    "created": "2026-08-07T23:54:36.956Z",
+    "updated": "2026-08-07T23:54:36.956Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 37,
+  "fields": {
+    "post": 11,
+    "name": "Ahmed Hassan",
+    "email": "ahmed.hassan@example.com",
+    "body": "Great read! Would love a follow-up on class-based decorators 🙌",
+    "created": "2026-08-07T23:54:36.961Z",
+    "updated": "2026-08-07T23:54:36.961Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 38,
+  "fields": {
+    "post": 12,
+    "name": "Emma Wilson",
+    "email": "emma.wilson@example.com",
+    "body": "'Documentation that never lies' is perfect. We added mypy to CI last month and it caught two bugs before review 🔥",
+    "created": "2026-08-07T23:54:36.970Z",
+    "updated": "2026-08-07T23:54:36.970Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 39,
+  "fields": {
+    "post": 12,
+    "name": "David Park",
+    "email": "david.park@example.com",
+    "body": "The Post or None example finally made Optional click for me.",
+    "created": "2026-08-07T23:54:36.987Z",
+    "updated": "2026-08-07T23:54:36.987Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 40,
+  "fields": {
+    "post": 12,
+    "name": "Lisa Nguyen",
+    "email": "lisa.nguyen@example.com",
+    "body": "Started hinting my utils module after this. Small step, but it already feels cleaner ✨",
+    "created": "2026-08-07T23:54:36.994Z",
+    "updated": "2026-08-07T23:54:36.994Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 41,
+  "fields": {
+    "post": 13,
+    "name": "Ryan O'Connor",
+    "email": "ryan.oconnor@example.com",
+    "body": "EXPLAIN ANALYZE saved my life last week. Seq Scan on 2M rows is not a joke 😬",
+    "created": "2026-08-07T23:54:37.004Z",
+    "updated": "2026-08-07T23:54:37.004Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 42,
+  "fields": {
+    "post": 13,
+    "name": "Yuki Tanaka",
+    "email": "yuki.tanaka@example.com",
+    "body": "Didn't know Django's Index supports condition. The partial index tip is going straight into our project.",
+    "created": "2026-08-07T23:54:37.010Z",
+    "updated": "2026-08-07T23:54:37.010Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 43,
+  "fields": {
+    "post": 13,
+    "name": "Fatemeh Rezaei",
+    "email": "fatemeh.rezaei@example.com",
+    "body": "The trigram part connects nicely to your search post. Reading both together is a mini-course 👏",
+    "created": "2026-08-07T23:54:37.015Z",
+    "updated": "2026-08-07T23:54:37.015Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 44,
+  "fields": {
+    "post": 14,
+    "name": "Tom Becker",
+    "email": "tom.becker@example.com",
+    "body": "'Same commands locally and in CI' is so true. Our pipeline used to be a surprise machine 😄",
+    "created": "2026-08-07T23:54:37.026Z",
+    "updated": "2026-08-07T23:54:37.026Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 45,
+  "fields": {
+    "post": 14,
+    "name": "Nina Petrova",
+    "email": "nina.petrova@example.com",
+    "body": "PostgreSQL service containers were the missing piece for me. Worked exactly as described 🙏",
+    "created": "2026-08-07T23:54:37.032Z",
+    "updated": "2026-08-07T23:54:37.032Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 46,
+  "fields": {
+    "post": 14,
+    "name": "Carlos Mendez",
+    "email": "carlos.mendez@example.com",
+    "body": "Any chance of a follow-up on caching pip dependencies? Great post!",
+    "created": "2026-08-07T23:54:37.037Z",
+    "updated": "2026-08-07T23:54:37.037Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 47,
+  "fields": {
+    "post": 15,
+    "name": "Hannah Schmidt",
+    "email": "hannah.schmidt@example.com",
+    "body": "The email sender example is the clearest dependency inversion explanation I've read. No UML needed 👌",
+    "created": "2026-08-07T23:54:37.048Z",
+    "updated": "2026-08-07T23:54:37.048Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 48,
+  "fields": {
+    "post": 15,
+    "name": "Omar Farouk",
+    "email": "omar.farouk@example.com",
+    "body": "I always thought SOLID was over-engineering. The 'smell detector' framing changed my mind.",
+    "created": "2026-08-07T23:54:37.052Z",
+    "updated": "2026-08-07T23:54:37.052Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 49,
+  "fields": {
+    "post": 15,
+    "name": "Grace Kim",
+    "email": "grace.kim@example.com",
+    "body": "Thin views + service functions is how we restructured our app last year. Can confirm it pays off 💯",
+    "created": "2026-08-07T23:54:37.059Z",
+    "updated": "2026-08-07T23:54:37.059Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 50,
+  "fields": {
+    "post": 16,
+    "name": "Alex Rivera",
+    "email": "alex.rivera@example.com",
+    "body": "'A letter to the next developer' — printing this and sticking it on my monitor 😂",
+    "created": "2026-08-07T23:54:37.066Z",
+    "updated": "2026-08-07T23:54:37.066Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 51,
+  "fields": {
+    "post": 16,
+    "name": "Sophie Martin",
+    "email": "sophie.martin@example.com",
+    "body": "Guilty of 'fix stuff' commits. From today: imperative mood only ✍️",
+    "created": "2026-08-07T23:54:37.071Z",
+    "updated": "2026-08-07T23:54:37.071Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 52,
+  "fields": {
+    "post": 16,
+    "name": "Mehdi Karimi",
+    "email": "mehdi.karimi@example.com",
+    "body": "Conventional Commits made our changelog automatic and reviews faster. Highly recommend.",
+    "created": "2026-08-07T23:54:37.077Z",
+    "updated": "2026-08-07T23:54:37.077Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.profile",
+  "pk": 1,
+  "fields": {
+    "user": 1,
+    "bio": "Founder and developer of this site. Full-stack web developer and Telegram bot creator with a decade of turning ideas into shipped, useful software.",
+    "avatar": "avatars/photo_2026-08-08_03-42-18_AKimjM5.jpg",
+    "created": "2026-08-07T16:09:41.442Z"
+  }
+},
+{
+  "model": "blog.profile",
+  "pk": 2,
+  "fields": {
+    "user": 3,
+    "bio": "Web developer focused on developer tooling and best practices. I share lessons from real projects: Git workflows, clean code habits and the small disciplines that save big time.",
+    "avatar": "avatars/photo_2026-08-08_03-42-25_R6C65Ll.jpg",
+    "created": "2026-08-07T16:09:41.471Z"
+  }
+},
+{
+  "model": "blog.profile",
+  "pk": 3,
+  "fields": {
+    "user": 2,
+    "bio": "Backend developer and Django enthusiast. I write about models, authentication and building maintainable web applications from scratch — the stuff I wish someone had told me on day one.",
+    "avatar": "avatars/photo_2026-08-08_03-42-21_x7spfGE.jpg",
+    "created": "2026-08-07T16:09:41.492Z"
+  }
+},
+{
+  "model": "blog.profile",
+  "pk": 4,
+  "fields": {
+    "user": 4,
+    "bio": "Senior backend engineer with 8 years of Django experience. I write about clean architecture, Python internals, and the tools that make teams ship faster.",
+    "avatar": "avatars/photo_2026-08-08_03-42-15_n6sSgy2.jpg",
+    "created": "2026-08-07T23:27:25.821Z"
+  }
+},
+{
+  "model": "blog.profile",
+  "pk": 5,
+  "fields": {
+    "user": 5,
+    "bio": "Full-stack developer specializing in Django, PostgreSQL and containerization. I love breaking down complex topics into practical guides you can use today.",
+    "avatar": "avatars/photo_2026-08-08_03-42-11_V2vPSk2.jpg",
+    "created": "2026-08-07T23:28:38.293Z"
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$XLspZlGL4idbIohs4RDqgM$BJA4DGqhm2r/w1KL8tenne//J0Y4wbMH69dIJHzBU+o=",
+    "last_login": "2026-08-02T20:44:04Z",
+    "is_superuser": true,
+    "username": "zahra",
+    "first_name": "zahra",
+    "last_name": "Ashnaeian",
+    "email": "zarrush9@gmail.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-08-02T20:43:16Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 2,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$Mo2LlPB2hv6O2jiXteHDln$A4n6QsL8G/8bp79zsalS+Ff4dKJqs/gW5TVQ31ZH2tM=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "alex",
+    "first_name": "Alex",
+    "last_name": "Carter",
+    "email": "alex@example.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-08-04T17:38:44Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 3,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$3ZqOG1ZYYLGBtxftAL2dSH$KB4NH+db0nbviSWE1hbleSq2NQLUIAfSdldw1Bo3uTk=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "emma3",
+    "first_name": "Emma",
+    "last_name": "Wilson",
+    "email": "emma@example.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-08-04T17:38:51Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 4,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$BpCVvnegUjO8ZRgfLXxYhd$byU5e2zv0J5058OChHTeYqGXLqKYVBytYbbQ+BNhwh8=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "Marcus01",
+    "first_name": "Marcus",
+    "last_name": "Chen",
+    "email": "marcus.chen@example.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-08-07T23:27:24Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 5,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$Bqi0UQmmCge4n4yeQo6d5V$133jPnggbIXt9NkQtjp13+gDxROVHrnlZIzgvPHpBn8=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "Sarah_405",
+    "first_name": "sarah",
+    "last_name": "mitchell",
+    "email": "sarah.mitchell@example.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-08-07T23:28:37Z",
+    "groups": [],
+    "user_permissions": []
+  }
+}
+]
