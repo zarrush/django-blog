@@ -1,0 +1,725 @@
+[
+{
+  "model": "blog.category",
+  "pk": 1,
+  "fields": {
+    "name": "Python",
+    "slug": "python"
+  }
+},
+{
+  "model": "blog.category",
+  "pk": 2,
+  "fields": {
+    "name": "Django",
+    "slug": "django"
+  }
+},
+{
+  "model": "blog.category",
+  "pk": 3,
+  "fields": {
+    "name": "PostgreSQL",
+    "slug": "postgresql"
+  }
+},
+{
+  "model": "blog.category",
+  "pk": 4,
+  "fields": {
+    "name": "Docker",
+    "slug": "docker"
+  }
+},
+{
+  "model": "blog.category",
+  "pk": 5,
+  "fields": {
+    "name": "Git",
+    "slug": "git"
+  }
+},
+{
+  "model": "blog.category",
+  "pk": 6,
+  "fields": {
+    "name": "Clean Code",
+    "slug": "clean-code"
+  }
+},
+{
+  "model": "blog.post",
+  "pk": 1,
+  "fields": {
+    "title": "Getting Started With Django6",
+    "slug": "getting-started-with-django6",
+    "body": "# Getting Started with Django 6\r\n\r\nDjango is one of the most popular Python web frameworks for building secure and scalable web applications.\r\n\r\n## Why Django?\r\n\r\nSome of its biggest advantages include:\r\n\r\n- Built-in authentication\r\n- Powerful ORM\r\n- Automatic admin panel\r\n- Secure by default\r\n- Excellent documentation\r\n\r\n## Installation\r\n\r\nCreate a virtual environment and install Django:\r\n\r\n```bash\r\npip install django\r\n```\r\n\r\nCreate a new project:\r\n\r\n```bash\r\ndjango-admin startproject mysite\r\n```\r\n\r\nRun the development server:\r\n\r\n```bash\r\npython manage.py runserver\r\n```\r\n\r\n## Conclusion\r\n\r\nDjango allows developers to focus on building features instead of reinventing common web development tasks.",
+    "publish": "2026-08-02T20:47:22Z",
+    "created": "2026-08-02T20:49:22.652Z",
+    "updated": "2026-08-07T13:36:29.115Z",
+    "author": 2,
+    "status": "PB",
+    "categories": [
+      2
+    ]
+  }
+},
+{
+  "model": "blog.post",
+  "pk": 2,
+  "fields": {
+    "title": "Why PostgresSQL is a Great Choice for Django",
+    "slug": "why-postgressql-is-a-great-choice-for-django",
+    "body": "# Why PostgreSQL?\r\n\r\nAlthough Django supports multiple database engines, PostgreSQL is considered one of the best choices for production environments.\r\n\r\n## Benefits\r\n\r\n- Excellent performance\r\n- Strong data integrity\r\n- Advanced indexing\r\n- Full-text search support\r\n- Rich extension ecosystem\r\n\r\n## Django Integration\r\n\r\nSwitching from SQLite to PostgreSQL is straightforward by updating the `DATABASES` configuration in `settings.py`.\r\n\r\nOnce configured, simply run:\r\n\r\n```bash\r\npython manage.py migrate\r\n```\r\n\r\nYour database schema will be recreated inside PostgreSQL.\r\n\r\n## Final Thoughts\r\n\r\nFor medium and large Django projects, PostgreSQL provides reliability and scalability that make it a preferred database.",
+    "publish": "2026-08-09T20:49:30Z",
+    "created": "2026-08-02T20:51:39.585Z",
+    "updated": "2026-08-07T23:38:43.369Z",
+    "author": 3,
+    "status": "PB",
+    "categories": [
+      3
+    ]
+  }
+},
+{
+  "model": "blog.post",
+  "pk": 3,
+  "fields": {
+    "title": "Dockerizing a Django Project",
+    "slug": "dockerizing-a-django-project",
+    "body": "# Running Django with Docker\r\n\r\nDocker makes development environments reproducible and easy to manage.\r\n\r\n## Advantages\r\n\r\n- Consistent environments\r\n- Easy dependency management\r\n- Simple database containers\r\n- Fast onboarding\r\n\r\n## Example\r\n\r\nRun PostgreSQL:\r\n\r\n```bash\r\ndocker run \\\r\n    --name blog-db \\\r\n    -e POSTGRES_DB=blog \\\r\n    -e POSTGRES_USER=bloguser \\\r\n    -e POSTGRES_PASSWORD=strongpassword \\\r\n    -p 5432:5432 \\\r\n    -d postgres\r\n```\r\n\r\n## Summary\r\n\r\nUsing Docker with Django simplifies development and prepares your project for deployment.",
+    "publish": "2026-08-02T20:52:10Z",
+    "created": "2026-08-02T20:54:04.759Z",
+    "updated": "2026-08-07T13:36:50.684Z",
+    "author": 2,
+    "status": "PB",
+    "categories": [
+      4
+    ]
+  }
+},
+{
+  "model": "blog.post",
+  "pk": 4,
+  "fields": {
+    "title": "Building a Blog System with Django",
+    "slug": "building-a-blog-system-with-django",
+    "body": "Building a blog system was a practical journey to understand how Django can be used to create a structured and maintainable web application.\r\n\r\nIn this project, I implemented core blog features including post management, categories, tags, comments, pagination, and content organization using Django's powerful framework capabilities.\r\n\r\nThe main goal of this project was not only to build a functional blog but also to understand Django's architecture, including models, views, templates, URL routing, and database interactions.\r\n\r\nThroughout the development process, I focused on writing clean code, improving project structure, and creating a foundation that can be extended with more advanced features in the future.",
+    "publish": "2026-08-04T17:22:21Z",
+    "created": "2026-08-04T17:25:46.934Z",
+    "updated": "2026-08-07T13:37:01.929Z",
+    "author": 1,
+    "status": "PB",
+    "categories": [
+      2
+    ]
+  }
+},
+{
+  "model": "blog.post",
+  "pk": 5,
+  "fields": {
+    "title": "Django Models and Database Relationships",
+    "slug": "django-models-and-database-relationships",
+    "body": "Django's ORM provides a powerful way to interact with databases using Python objects instead of writing raw SQL queries.\r\n\r\nIn this project, I worked with different types of database relationships including ForeignKey relationships between posts, users, and other related data.\r\n\r\nUnderstanding models and relationships helped me design a better database structure and manage connected data efficiently.\r\n\r\nThis part of the project improved my understanding of how backend applications organize and communicate with databases.",
+    "publish": "2026-08-01T17:25:57Z",
+    "created": "2026-08-04T17:27:49.355Z",
+    "updated": "2026-08-07T23:39:21.752Z",
+    "author": 3,
+    "status": "PB",
+    "categories": [
+      2
+    ]
+  }
+},
+{
+  "model": "blog.post",
+  "pk": 6,
+  "fields": {
+    "title": "Django Authentication System",
+    "slug": "django-authentication-system",
+    "body": "User authentication is one of the essential parts of modern web applications.\r\n\r\nIn this project, I explored Django's built-in authentication system to manage users, permissions, and secure access to different parts of the application.\r\n\r\nThe implementation included user management through Django Admin and understanding how Django handles authentication workflows behind the scenes.\r\n\r\nThis experience provided a better understanding of managing users and building secure backend features.",
+    "publish": "2026-08-09T17:27:54Z",
+    "created": "2026-08-04T17:28:56.589Z",
+    "updated": "2026-08-07T23:39:30.378Z",
+    "author": 1,
+    "status": "PB",
+    "categories": [
+      2
+    ]
+  }
+},
+{
+  "model": "blog.post",
+  "pk": 7,
+  "fields": {
+    "title": "Implementing Search in Django with PostgreSQL Trigram Similarity",
+    "slug": "implementing-search-in-django-with-postgresql-trigram-similarity",
+    "body": "A powerful search system can significantly improve the user experience of a content-based application.\r\n\r\nIn this project, I implemented an advanced search feature using PostgreSQL Trigram Similarity with Django.\r\n\r\nInstead of relying on simple text matching, the search system can find similar results based on the similarity between user input and stored data.\r\n\r\nThis feature helped me understand how database-level search capabilities can be integrated into Django applications for better performance and accuracy.",
+    "publish": "2026-08-01T17:29:12Z",
+    "created": "2026-08-04T17:30:17.187Z",
+    "updated": "2026-08-07T23:38:31.313Z",
+    "author": 1,
+    "status": "PB",
+    "categories": [
+      3
+    ]
+  }
+},
+{
+  "model": "blog.post",
+  "pk": 8,
+  "fields": {
+    "title": "Using Django Admin as a Content Management Tool",
+    "slug": "using-django-admin-as-a-content-management-tool",
+    "body": "Django Admin provides a powerful interface for managing application data without building a separate dashboard from scratch.\r\n\r\nIn this project, I customized and used Django Admin to manage blog posts, users, tags, and comments efficiently.\r\n\r\nThis allowed the application to have a simple content management workflow and demonstrated how Django can quickly provide administrative tools for backend applications.",
+    "publish": "2026-08-06T17:30:26Z",
+    "created": "2026-08-04T17:31:20.041Z",
+    "updated": "2026-08-07T23:39:10.790Z",
+    "author": 3,
+    "status": "PB",
+    "categories": [
+      2
+    ]
+  }
+},
+{
+  "model": "blog.post",
+  "pk": 9,
+  "fields": {
+    "title": "Clean Code Practices in Django Projects",
+    "slug": "clean-code-practices-in-django-projects",
+    "body": "Writing code that works is important, but maintaining and improving that code over time is equally valuable.\r\n\r\nDuring the development of this Django project, I focused on improving code organization, removing unnecessary dependencies, and creating a cleaner project structure.\r\n\r\nRefactoring helped make the application easier to understand, maintain, and extend with new features.\r\n\r\nClean code practices are essential for building professional and scalable software projects.",
+    "publish": "2026-08-06T17:31:22Z",
+    "created": "2026-08-04T17:32:22.239Z",
+    "updated": "2026-08-07T23:38:52.472Z",
+    "author": 2,
+    "status": "PB",
+    "categories": [
+      6
+    ]
+  }
+},
+{
+  "model": "blog.post",
+  "pk": 10,
+  "fields": {
+    "title": "Git Workflow for Django Projects",
+    "slug": "git-workflow-for-django-projects",
+    "body": "Version control is an essential part of modern software development.\r\n\r\nThroughout this project, I used Git and GitHub to track changes, organize development steps, and maintain a clear history of improvements.\r\n\r\nUsing meaningful commits and structured workflow helped make the development process more organized and easier to review.\r\n\r\nThis experience improved my understanding of professional development practices and collaboration workflows.",
+    "publish": "2026-08-04T17:32:39Z",
+    "created": "2026-08-04T17:33:34.037Z",
+    "updated": "2026-08-06T18:30:59.101Z",
+    "author": 3,
+    "status": "PB",
+    "categories": [
+      5
+    ]
+  }
+},
+{
+  "model": "blog.post",
+  "pk": 11,
+  "fields": {
+    "title": "Understanding Python Decorators with Practical Examples",
+    "slug": "understanding-python-decorators-with-practical-examples",
+    "body": "Decorators are one of Python's most elegant features, yet many developers treat them as magic. In this post we break that magic down into plain functions.\r\nA decorator is simply a function that takes a function and returns a new one. Because functions in Python are first-class objects, you can pass them around like any other value. The @ syntax is just sugar: @shout above a function means exactly greet = shout(greet).\r\nA common mistake is forgetting functools.wraps. Without it, your decorated function loses its original name and docstring, which makes debugging and documentation harder. Always wrap your wrapper.\r\nYou already use decorators every day in Django: login_required, require_POST and admin.register() are all decorators. Once you understand the pattern, you can write your own for caching, logging or timing.\r\nFor example, a timing decorator is five lines: record time before the call, run the function, print the elapsed time, return the result. I add one to almost every project and it has revealed more slow views than any profiler.\r\nStart small: the next time you notice the same wrapping logic around several functions, turn it into a decorator instead of copying code.",
+    "publish": "2026-08-07T23:32:18Z",
+    "created": "2026-08-07T23:34:47.223Z",
+    "updated": "2026-08-07T23:39:39.937Z",
+    "author": 4,
+    "status": "PB",
+    "categories": [
+      1
+    ]
+  }
+},
+{
+  "model": "blog.post",
+  "pk": 12,
+  "fields": {
+    "title": "Python Type Hints: Writing Self-Documenting Code",
+    "slug": "python-type-hints-writing-self-documenting-code",
+    "body": "Type hints don't make Python faster — they make it clearer. They are documentation that never lies, because your tools can check it for you.\r\nWhen a function declares its inputs and outputs, any reader instantly knows how to use it without opening the body. That alone removes a whole category of \"what does this return?\" comments.\r\nThe biggest win is being honest about missing values. If a lookup can fail, declare that it returns Post or None. This single hint forces every caller to handle the empty case, and silently kills a whole class of AttributeError bugs.\r\nIn Django projects, type hints shine the most in service modules and utility functions, where the business logic lives. Combine them with mypy in your CI pipeline and you catch bugs before a single test runs.\r\nYou don't need 100% coverage to get 80% of the value. Start by hinting your most-used helpers, and let the habit grow from there.",
+    "publish": "2026-08-03T23:34:50Z",
+    "created": "2026-08-07T23:35:54.315Z",
+    "updated": "2026-08-07T23:38:09.123Z",
+    "author": 5,
+    "status": "PB",
+    "categories": [
+      1
+    ]
+  }
+},
+{
+  "model": "blog.post",
+  "pk": 13,
+  "fields": {
+    "title": "PostgreSQL Indexing Strategies for Faster Django Queries",
+    "slug": "postgresql-indexing-strategies-for-faster-django-queries",
+    "body": "A query that feels fast on 100 rows can crawl on a million. The difference is usually an index, and knowing what to index is the real skill.\r\nThe rule of thumb: index the columns you filter, sort and join by — the WHERE, ORDER BY and foreign key columns. Our Post model already indexes publish for exactly this reason.\r\nBefore adding indexes, measure. Run EXPLAIN ANALYZE on your slow query; if you see a Seq Scan on a large table, that's your cue.\r\nThree strategies pay off quickly. First, composite indexes that match your query shape — order matters, so build them in the same order you filter. Second, partial indexes for hot subsets, like indexing only published posts; Django supports this with the condition argument on models.Index. Third, trigram indexes for fuzzy text search — this is exactly what powers the search page on this blog.\r\nRemember that every index slows writes slightly. Index with intent, measure with EXPLAIN, and let real queries — not guesses — drive your decisions.",
+    "publish": "2026-08-08T23:36:11Z",
+    "created": "2026-08-07T23:37:12.940Z",
+    "updated": "2026-08-07T23:40:20.768Z",
+    "author": 4,
+    "status": "PB",
+    "categories": [
+      3
+    ]
+  }
+},
+{
+  "model": "blog.post",
+  "pk": 14,
+  "fields": {
+    "title": "GitHub Actions: Automating Tests and Deployment for Django",
+    "slug": "github-actions-automating-tests-and-deployment-for-django",
+    "body": "Every project reaches the point where \"I'll run the tests manually\" stops working. That's when continuous integration earns its place, and GitHub Actions makes a first pipeline surprisingly simple.\r\nA workflow is just a YAML file inside .github/workflows. For a Django project, the classic first pipeline has three jobs: check out the code, set up Python with your dependencies, and run the test suite.\r\nThe most important habit is running the same commands locally and in CI. If your pipeline runs flake8, mypy and pytest, your local workflow should too. A CI that surprises you is a CI you'll eventually ignore.\r\nFor Django specifically, you'll need a PostgreSQL service container inside the workflow. GitHub Actions supports services natively, so your tests run against a real database instead of SQLite pretending to be one. This alone has caught real bugs for me more than once.\r\nOnce tests are green, add a deploy job guarded by the main branch. Even a simple SSH deploy is enough for a personal project.\r\nStart with a single workflow that runs on every push. Ten lines of YAML today save you from the \"but it worked on my machine\" conversation tomorrow.",
+    "publish": "2026-08-04T23:41:59Z",
+    "created": "2026-08-07T23:43:08.337Z",
+    "updated": "2026-08-07T23:43:08.337Z",
+    "author": 5,
+    "status": "PB",
+    "categories": [
+      5
+    ]
+  }
+},
+{
+  "model": "blog.post",
+  "pk": 15,
+  "fields": {
+    "title": "SOLID Principles in Python: A Practical Guide",
+    "slug": "solid-principles-in-python-a-practical-guide",
+    "body": "SOLID sounds academic until you meet code that violates it. These five principles are really one idea wearing different hats: each piece of your code should have a single reason to change.\r\nSingle Responsibility is the easiest to apply in Django. A view that fetches data, validates business rules, sends an email and renders a template has four reasons to change. Move the business rules into a service function and the view becomes thin and obvious.\r\nOpen/Closed and Liskov show up whenever you rely on polymorphism: a new payment provider should be addable without touching the old ones, and every implementation must honor the same contract. Python's duck typing makes this natural — describe the behavior you expect and let any object satisfy it.\r\nDependency Inversion is the principle that changes how you test. If a function imports the SMTP client directly, you can't test it without sending email. If it receives a sender object instead, your tests pass in a fake. That single inversion turns untestable code into testable code.\r\nYou don't need all five principles everywhere. Use them as a smell detector: when a change feels painful, one of them is usually being violated nearby.",
+    "publish": "2026-08-10T23:43:10Z",
+    "created": "2026-08-07T23:44:18.809Z",
+    "updated": "2026-08-07T23:44:18.809Z",
+    "author": 4,
+    "status": "PB",
+    "categories": [
+      1
+    ]
+  }
+},
+{
+  "model": "blog.post",
+  "pk": 16,
+  "fields": {
+    "title": "Writing Meaningful Git Commit Messages",
+    "slug": "writing-meaningful-git-commit-messages",
+    "body": "Open the history of any mature project and you can read it like a story. Open a messy one and you see \"fix\", \"update\", \"wip\". The difference isn't talent — it's habit.\r\nA good commit message starts with a short imperative subject: \"Add category filter to post list\", not \"added some stuff\". The imperative mood reads like an instruction: applying this commit will do X.\r\nThe body is where the real value lives. Explain why the change was made, not what changed — the diff already shows the what. A reviewer six months from now (and that reviewer will be you) needs the context: the bug, the constraint, the alternative you rejected.\r\nKeep commits small and focused. One commit per feature, fix or refactor. When you mix a rename and a behavior change in a single commit, neither can be reverted cleanly.\r\nConventions like Conventional Commits (feat:, fix:, docs:) give your history a consistent rhythm and even make automatic changelogs possible. You don't need to adopt the whole spec — stealing its discipline is already worth it.\r\nYour commit history is a letter to the next developer. Write it like someone will actually read it, because someone will.",
+    "publish": "2026-08-11T23:44:54Z",
+    "created": "2026-08-07T23:45:48.172Z",
+    "updated": "2026-08-07T23:45:48.172Z",
+    "author": 5,
+    "status": "PB",
+    "categories": [
+      5
+    ]
+  }
+},
+{
+  "model": "blog.like",
+  "pk": 1,
+  "fields": {
+    "user": 1,
+    "post": 8,
+    "created": "2026-08-07T00:56:19.316Z"
+  }
+},
+{
+  "model": "blog.like",
+  "pk": 17,
+  "fields": {
+    "user": 1,
+    "post": 9,
+    "created": "2026-08-07T13:28:10.144Z"
+  }
+},
+{
+  "model": "blog.like",
+  "pk": 19,
+  "fields": {
+    "user": 1,
+    "post": 10,
+    "created": "2026-08-07T20:05:26.352Z"
+  }
+},
+{
+  "model": "blog.like",
+  "pk": 20,
+  "fields": {
+    "user": 1,
+    "post": 15,
+    "created": "2026-08-07T23:56:10.068Z"
+  }
+},
+{
+  "model": "blog.like",
+  "pk": 21,
+  "fields": {
+    "user": 1,
+    "post": 2,
+    "created": "2026-08-07T23:56:14.388Z"
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 8,
+  "fields": {
+    "post": 3,
+    "name": "Michael Brown",
+    "email": "michael.brown@example.com",
+    "body": "Great explanation! Containerizing Django makes the development environment much more consistent across different machines",
+    "created": "2026-08-04T17:53:54.678Z",
+    "updated": "2026-08-04T17:53:54.678Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 9,
+  "fields": {
+    "post": 3,
+    "name": "Sophia Davis",
+    "email": "sophia.davis@example.com",
+    "body": "I recently started learning Docker, and this article helped me understand why it's useful even for small personal projects",
+    "created": "2026-08-04T17:54:23.859Z",
+    "updated": "2026-08-04T17:54:23.859Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 10,
+  "fields": {
+    "post": 3,
+    "name": "Daniel Brooks",
+    "email": "daniel.brooks@example.com",
+    "body": "It would be interesting to see a follow-up article covering Docker Compose with PostgreSQL.",
+    "created": "2026-08-04T17:55:05.652Z",
+    "updated": "2026-08-04T17:55:05.652Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 11,
+  "fields": {
+    "post": 1,
+    "name": "Ethan Walker",
+    "email": "ethan.walker@example.com",
+    "body": "Excellent overview! It would be interesting to see a follow-up article covering project structure and Django apps in more detail.",
+    "created": "2026-08-04T17:59:16.835Z",
+    "updated": "2026-08-04T17:59:16.835Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 12,
+  "fields": {
+    "post": 1,
+    "name": "Sophia Davis",
+    "email": "sophia.davis@example.com",
+    "body": "I recently started learning Django, and this article answered many of the questions I had about setting up a new project. Thanks for keeping the explanations clear and beginner-friendly.",
+    "created": "2026-08-04T17:59:54.492Z",
+    "updated": "2026-08-04T17:59:54.492Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 13,
+  "fields": {
+    "post": 1,
+    "name": "Michael Brown",
+    "email": "michael.brown@example.com",
+    "body": "This was a great introduction to Django 6. The step-by-step explanations made it much easier to understand the framework and its overall structure. Looking forward to reading more articles in this series!",
+    "created": "2026-08-04T18:00:25.270Z",
+    "updated": "2026-08-04T18:00:25.270Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 14,
+  "fields": {
+    "post": 2,
+    "name": "Olivia Miller",
+    "email": "olivia.miller@example.com",
+    "body": "Thanks for explaining the advantages so clearly. The comparison with other databases helped me understand why PostgreSQL is such a popular choice in production environments.",
+    "created": "2026-08-04T18:01:45.532Z",
+    "updated": "2026-08-04T18:01:45.532Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 15,
+  "fields": {
+    "post": 2,
+    "name": "Michael Brown",
+    "email": "michael.brown@example.com",
+    "body": "I completely agree with your points. PostgreSQL has become my preferred database for Django projects because of its reliability and powerful built-in features.",
+    "created": "2026-08-04T18:02:28.937Z",
+    "updated": "2026-08-04T18:02:28.937Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 16,
+  "fields": {
+    "post": 2,
+    "name": "Daniel Brooks",
+    "email": "daniel.brooks@example.com",
+    "body": "Great article! I'd love to read a follow-up post about optimizing PostgreSQL performance and indexing in Django applications.",
+    "created": "2026-08-04T18:03:02.118Z",
+    "updated": "2026-08-04T18:03:02.118Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 17,
+  "fields": {
+    "post": 4,
+    "name": "Aran Deli",
+    "email": "aran.deli@example.com",
+    "body": "Building a blog is one of the best ways to learn Django fundamentals. I really liked how the project was organized and how each feature was introduced step by step",
+    "created": "2026-08-04T18:04:43.629Z",
+    "updated": "2026-08-04T18:04:43.629Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 18,
+  "fields": {
+    "post": 4,
+    "name": "James Anderson",
+    "email": "james.anderson@example.com",
+    "body": "This article provides a solid overview of what goes into creating a real-world Django application. The explanations about models and views were especially helpful.",
+    "created": "2026-08-04T18:05:12.605Z",
+    "updated": "2026-08-04T18:05:12.605Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 19,
+  "fields": {
+    "post": 4,
+    "name": "Emily Wilson",
+    "email": "emily.wilson@example.com",
+    "body": "Great project! I appreciate that you focused on practical features like comments, pagination, and search instead of keeping the application too simple. It makes the project feel much more realistic.",
+    "created": "2026-08-04T18:05:41.712Z",
+    "updated": "2026-08-04T18:05:41.712Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 20,
+  "fields": {
+    "post": 6,
+    "name": "Ethan Walker",
+    "email": "ethan.walker@example.com",
+    "body": "Great explanation! A follow-up article about custom user models and improving authentication features would be interesting to read.",
+    "created": "2026-08-04T18:06:40.245Z",
+    "updated": "2026-08-04T18:06:40.245Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 21,
+  "fields": {
+    "post": 6,
+    "name": "Isabella Moore",
+    "email": "isabella.moore@example.com",
+    "body": "I like how Django provides built-in tools for managing users and permissions. It saves a lot of time while still keeping the application secure :)",
+    "created": "2026-08-04T18:07:35.478Z",
+    "updated": "2026-08-04T18:07:35.478Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 22,
+  "fields": {
+    "post": 6,
+    "name": "Noah Taylor",
+    "email": "noah.taylor@example.com",
+    "body": "Authentication is one of the most important parts of any web application. This article explains the Django authentication workflow in a clear and practical way.",
+    "created": "2026-08-04T18:08:08.793Z",
+    "updated": "2026-08-04T18:08:08.793Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 23,
+  "fields": {
+    "post": 7,
+    "name": "Olivia Miller",
+    "email": "olivia.miller@example.com",
+    "body": "I enjoyed this article because it goes beyond simple keyword matching. Using PostgreSQL for smarter search makes a lot of sense for content-based applications like blogs. !",
+    "created": "2026-08-04T18:09:17.392Z",
+    "updated": "2026-08-04T18:09:17.392Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 24,
+  "fields": {
+    "post": 7,
+    "name": "Daniel Brooks",
+    "email": "daniel.brooks@example.com",
+    "body": "This is a great example of using database features to improve application functionality. PostgreSQL Trigram Similarity looks like a powerful solution for building more accurate search experiences.",
+    "created": "2026-08-04T18:09:43.012Z",
+    "updated": "2026-08-04T18:09:43.012Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 25,
+  "fields": {
+    "post": 8,
+    "name": "James Anderson",
+    "email": "james.anderson@example.com",
+    "body": "Django Admin is one of the features that makes Django so productive. Having a built-in management interface can save a lot of development time when building content-based applications",
+    "created": "2026-08-04T18:31:41.689Z",
+    "updated": "2026-08-04T18:31:41.689Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 26,
+  "fields": {
+    "post": 8,
+    "name": "Isabella Moore",
+    "email": "isabella.moore@example.com",
+    "body": "I like how Django Admin can be customized to match the needs of a project. It is a simple but powerful solution for managing posts, users, and other application data.",
+    "created": "2026-08-04T18:32:11.547Z",
+    "updated": "2026-08-04T18:32:11.547Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 27,
+  "fields": {
+    "post": 5,
+    "name": "Daniel Brooks",
+    "email": "daniel.brooks@example.com",
+    "body": "Understanding models and relationships is a key part of working with Django. This article explains well how Django ORM helps developers manage database structures using Python objects",
+    "created": "2026-08-04T18:33:15.112Z",
+    "updated": "2026-08-04T18:33:15.112Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 28,
+  "fields": {
+    "post": 5,
+    "name": "Emma Wilson",
+    "email": "emma.wilson@example.com",
+    "body": "Great explanation of database relationships! The examples around connecting users, posts, and related data make it easier to understand how real-world applications are structured.",
+    "created": "2026-08-04T18:33:45.362Z",
+    "updated": "2026-08-04T18:33:45.362Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 29,
+  "fields": {
+    "post": 9,
+    "name": "Noah Taylor",
+    "email": "noah.taylor@example.com",
+    "body": "Writing clean code becomes more important as projects grow. I like how this article focuses on improving structure and maintainability instead of only making the application work",
+    "created": "2026-08-04T18:35:02.154Z",
+    "updated": "2026-08-04T18:35:02.154Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 30,
+  "fields": {
+    "post": 9,
+    "name": "Olivia Miller",
+    "email": "olivia.miller@example.com",
+    "body": "Refactoring and organizing code properly can make a huge difference in long-term projects. These practices are useful for any Django developer who wants to build scalable applications",
+    "created": "2026-08-04T18:35:33.289Z",
+    "updated": "2026-08-04T18:35:33.289Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 31,
+  "fields": {
+    "post": 10,
+    "name": "Charlotte Harris",
+    "email": "charlotte.harris@example.com",
+    "body": "I like the focus on meaningful commits and keeping a clean project history. These small practices can make a big difference when working on larger applications.",
+    "created": "2026-08-04T18:36:24.517Z",
+    "updated": "2026-08-04T18:36:24.517Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 32,
+  "fields": {
+    "post": 10,
+    "name": "Lucas Martin",
+    "email": "lucas.martin@example.com",
+    "body": "Great article! Learning Git alongside Django development is really important because version control is a major part of professional software projects.",
+    "created": "2026-08-04T18:36:48.693Z",
+    "updated": "2026-08-04T18:36:48.693Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 33,
+  "fields": {
+    "post": 10,
+    "name": "Michael Brown",
+    "email": "michael.brown@example.com",
+    "body": "Git is an essential skill for every developer. Using a proper workflow makes it much easier to track changes, experiment with new features, and keep projects organized.",
+    "created": "2026-08-04T18:37:19.978Z",
+    "updated": "2026-08-04T18:37:19.978Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 34,
+  "fields": {
+    "post": 10,
+    "name": "Amelia Clark",
+    "email": "amelia.clark@example.com",
+    "body": "The examples of managing changes in a Django project were helpful. A good Git workflow makes debugging and reviewing code much easier",
+    "created": "2026-08-04T18:37:50.182Z",
+    "updated": "2026-08-04T18:37:50.182Z",
+    "active": true
+  }
+},
+{
+  "model": "blog.comment",
+  "pk": 35,
+  "fields": {
+    "post": 11,
+    "name": "Jordan Lee",
+    "email": "jordan.lee@example.com",
+    "body": 
