@@ -11,9 +11,11 @@ from django.contrib.auth.models import User as AuthUser
 
 from .models import Category, Comment, Like, Post, Profile
 
+from modeltranslation.admin import TranslationAdmin
+
 
 @admin.register(Post)
-class PostAdmin(admin.ModelAdmin):
+class PostAdmin(TranslationAdmin):
     list_display = ('title', 'slug', 'author', 'publish', 'status')
     list_filter = ('status', 'created', 'publish', 'author')
     search_fields = ('title', 'body')

@@ -5,6 +5,7 @@ Handles post listing (with tag/category filters), post detail,
 comments, likes, search, archive and author pages.
 """
 
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.postgres.search import TrigramSimilarity
@@ -176,3 +177,4 @@ def author_page(request, username):
         'total_posts': posts.count(),
         'total_likes': Like.objects.filter(post__author=author).count(),
     })
+

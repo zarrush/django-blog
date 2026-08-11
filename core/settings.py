@@ -21,6 +21,8 @@ ALLOWED_HOSTS = []
 
 # Application definition
 INSTALLED_APPS = [
+    # ترنسلیت
+    "modeltranslation",
     # Django built-ins
     'django.contrib.admin',
     'django.contrib.auth',
@@ -35,17 +37,35 @@ INSTALLED_APPS = [
     'taggit',
     # Local apps
     'blog',
+    'accounts',
+    'pages',
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.locale.LocaleMiddleware",      
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+LANGUAGE_CODE = "fa"
+
+LANGUAGES = [
+    ("fa", "فارسی"),
+    ("en", "English"),
+]
+
+LOCALE_PATHS = [BASE_DIR / "locale"]
+USE_I18N = True
+
+MODELTRANSLATION_FALLBACK_LANGUAGES = {
+    "default": ("fa", "en"),   # برای زبان‌هایی که صریح نیومدن (یعنی fa): اول fa، اگه خالی بود en
+    "en": ("en", "fa"),        # اگه متن انگلیسی خالی بود → فارسی نشون بده
+}
 
 ROOT_URLCONF = 'core.urls'
 
@@ -59,6 +79,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.i18n', # دو زبانه کردن
             ],
         },
     },
