@@ -39,3 +39,87 @@ body { font-family: var(--font-main); }
 
 .like-form { display: inline; }
 .avatar { border-radius: 50%; }
+
+.auth-container {
+  max-width: 400px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+.auth-tabs {
+  display: flex;
+  border-bottom: 2px solid var(--border);
+  margin-bottom: 1.5rem;
+}
+
+.auth-tab {
+  flex: 1;
+  text-align: center;
+  padding: 0.75rem;
+  text-decoration: none;
+  color: var(--muted);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.2s;
+}
+
+.auth-tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  font-weight: 600;
+}
+
+.auth-form h2 {
+  margin-bottom: 1.5rem;
+}
+
+.form-field {
+  margin-bottom: 1rem;
+}
+
+.form-field label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-weight: 500;
+}
+
+.form-field input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--card);
+  color: var(--text);
+}
+
+.form-field input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.error {
+  display: block;
+  color: #dc2626;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+  width: 100%;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}

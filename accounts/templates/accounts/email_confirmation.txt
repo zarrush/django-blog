@@ -1,0 +1,8 @@
+{% load i18n %}
+{% blocktrans with email=user.email %}Hello {{ email }},{% endblocktrans %}
+
+{% trans "Please confirm your email by clicking the link below:" %}
+
+{{ confirm_url }}
+
+{% trans "If you did not create an account, you can ignore this email." %}

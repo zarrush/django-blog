@@ -145,27 +145,3 @@ class Comment(models.Model):
 
     def __str__(self):
         return f'Comment by {self.name} on {self.post}'
-
-
-class Profile(models.Model):
-    """Extended user profile with bio and avatar."""
-    user = models.OneToOneField(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name='profile',
-    )
-    bio = models.TextField(max_length=500, blank=True)
-    avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
-    created = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f'{self.user.username} profile'
-
-
-@receiver(post_save, sender=settings.AUTH_USER_MODEL)
-def create_or_save_profile(sender, instance, created, **kwargs):
-    """Auto-create a Profile when a new user is created."""
-    if created:
-        Profile.objects.create(user=instance)
-    else:
-        instance.profile.save()

@@ -1,0 +1,65 @@
+{% extends "blog/base.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="auth-container">
+  <div class="auth-tabs">
+    <a href="?tab=login" class="auth-tab {% if active_tab == 'login' %}active{% endif %}">
+      {% trans "Login" %}
+    </a>
+    <a href="?tab=signup" class="auth-tab {% if active_tab == 'signup' %}active{% endif %}">
+      {% trans "Sign Up" %}
+    </a>
+  </div>
+
+  {% if active_tab == 'login' %}
+    <form method="post" class="auth-form">
+      {% csrf_token %}
+      <h2>{% trans "Login" %}</h2>
+      {% for field in form_login %}
+        <div class="form-field">
+          {{ field.label_tag }}
+          {{ field }}
+          {% for error in field.errors %}
+            <span class="error">{{ error }}</span>
+          {% endfor %}
+        </div>
+      {% endfor %}
+      {% if form_login.non_field_errors %}
+        <div class="non-field-errors">
+          {% for error in form_login.non_field_errors %}
+            <span class="error">{{ error }}</span>
+          {% endfor %}
+        </div>
+      {% endif %}
+      <button type="submit" name="login" class="btn btn-primary">
+        {% trans "Login" %}
+      </button>
+    </form>
+  {% else %}
+    <form method="post" class="auth-form">
+      {% csrf_token %}
+      <h2>{% trans "Sign Up" %}</h2>
+      {% for field in form_signup %}
+        <div class="form-field">
+          {{ field.label_tag }}
+          {{ field }}
+          {% for error in field.errors %}
+            <span class="error">{{ error }}</span>
+          {% endfor %}
+        </div>
+      {% endfor %}
+      {% if form_signup.non_field_errors %}
+        <div class="non-field-errors">
+          {% for error in form_signup.non_field_errors %}
+            <span class="error">{{ error }}</span>
+          {% endfor %}
+        </div>
+      {% endif %}
+      <button type="submit" name="signup" class="btn btn-primary">
+        {% trans "Sign Up" %}
+      </button>
+    </form>
+  {% endif %}
+</div>
+{% endblock %}

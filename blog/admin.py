@@ -1,17 +1,12 @@
 """
 Admin configuration for the blog application.
-
-Customizes the admin for Post, Comment, Category, Like and Profile,
-and extends the built-in User admin with a profile inline.
 """
 
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from django.contrib.auth.models import User as AuthUser
-
-from .models import Category, Comment, Like, Post, Profile
 
 from modeltranslation.admin import TranslationAdmin
+
+from .models import Category, Comment, Like, Post
 
 
 @admin.register(Post)
@@ -44,25 +39,6 @@ class CategoryAdmin(admin.ModelAdmin):
 class LikeAdmin(admin.ModelAdmin):
     list_display = ('user', 'post', 'created')
     list_filter = ('created',)
-    search_fields = ('user__username', 'post__title')
+    search_fields = ('user__email', 'post__title')
 
-
-@admin.register(Profile)
-class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'created')
-    search_fields = ('user__username',)
-
-
-class ProfileInline(admin.StackedInline):
-    model = Profile
-    can_delete = False
-    verbose_name_plural = 'Profile'
-
-
-class UserAdmin(BaseUserAdmin):
-    """Built-in User admin extended with the profile inline."""
-    inlines = (ProfileInline,)
-
-
-admin.site.unregister(AuthUser)
-admin.site.register(AuthUser, UserAdmin)
+    
