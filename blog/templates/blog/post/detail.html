@@ -31,8 +31,13 @@
 
         <p class="date">
             Published {{ post.publish|date:"M j, Y" }} by
-            <a href="{% url 'blog:author_page' post.author.username %}">{{ post.author.username }}</a>
-        </p>
+            <a href="{% url 'blog:author_page' post.author.id %}">
+    {% if post.author.username %}
+        {{ post.author.username }}
+    {% else %}
+        {{ post.author.email }}
+    {% endif %}
+</a>
 
         <p class="reading-time">{{ post.body|reading_time }}</p>
 

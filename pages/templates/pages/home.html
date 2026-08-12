@@ -1,6 +1,48 @@
-{% extends "base.html" %}
+{% extends "blog/base.html" %}
 {% load i18n %}
+
 {% block content %}
-  <h1>{% trans "Home" %}</h1>
-  <p>{% trans "The latest posts will appear here." %}</p>
+<section class="hero">
+  <h1>{% trans "Welcome to My Blog" %}</h1>
+  <p>{% trans "Thoughts on code, life and everything in between." %}</p>
+</section>
+
+<section class="latest">
+  <h2>{% trans "Latest Posts" %}</h2>
+  <div class="post-grid">
+    {% for post in latest_posts %}
+      <article class="post-card">
+        {% if post.featured_image %}
+          <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="post-image">
+        {% endif %}
+        <div class="post-content">
+          <h3><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h3>
+          <p class="excerpt">
+            {% if post.excerpt %}
+              {{ post.excerpt }}
+            {% else %}
+              {{ post.body|truncatewords:20|striptags }}
+            {% endif %}
+          </p>
+          <div class="meta">
+            <span class="date">{{ post.publish|date:"M d, Y" }}</span>
+            <span class="author">{{ post.author }}</span>
+          </div>
+          <a href="{{ post.get_absolute_url }}" class="read-more">{% trans "Read more" %} →</a>
+        </div>
+      </article>
+    {% empty %}
+      <p>{% trans "No posts yet." %}</p>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="cats">
+  <h2>{% trans "Categories" %}</h2>
+  <ul class="cat-list">
+    {% for cat in categories %}
+      <li><a href="{{ cat.get_absolute_url }}">{{ cat.name }}</a></li>
+    {% endfor %}
+  </ul>
+</section>
 {% endblock %}

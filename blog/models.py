@@ -94,6 +94,17 @@ class Post(models.Model):
                 self.slug,
             ],
         )
+    excerpt = models.TextField(
+    max_length=300,
+    blank=True,
+    help_text="Short summary for homepage cards (max 300 chars)",
+)
+    featured_image = models.ImageField(
+        upload_to="posts/",
+        blank=True,
+        null=True,
+        help_text="Featured image for post cards",
+)
 
 
 class Like(models.Model):

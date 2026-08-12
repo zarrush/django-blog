@@ -1,5 +1,7 @@
-{% extends "base.html" %}
+{% extends "blog/base.html" %}
 {% load i18n %}
 {% block content %}
-  <h1>{% trans "About Us" %}</h1>
+<h1>{% trans "About Us" %}</h1>
+<p>{% trans "This blog is built with Django — template-driven, bilingual and theme-aware." %}</p>
+<p>{% trans "We write about software, open source and the craft of building for the web." %}</p>
 {% endblock %}

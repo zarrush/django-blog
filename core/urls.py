@@ -43,8 +43,8 @@ urlpatterns = [
 
 urlpatterns += i18n_patterns(
     path("accounts/", include("accounts.urls")),
-    path("", include("blog.urls")),
-    path("", include("pages.urls")),
+    path("", include("pages.urls")),        # هوم اول
+    path("blog/", include("blog.urls")),    # لیست کامل زیر /blog/
     prefix_default_language=True,
 )
 

@@ -1,5 +1,19 @@
-{% extends "base.html" %}
+{% extends "blog/base.html" %}
 {% load i18n %}
 {% block content %}
-  <h1>{% trans "Contact Us" %}</h1>
+<h1>{% trans "Contact Us" %}</h1>
+{% if messages %}
+  {% for m in messages %}<p class="flash">{{ m }}</p>{% endfor %}
+{% endif %}
+<form method="post" class="auth-form">
+  {% csrf_token %}
+  {% for field in form %}
+    <div class="form-field">
+      {{ field.label_tag }}
+      {{ field }}
+      {% for error in field.errors %}<span class="error">{{ error }}</span>{% endfor %}
+    </div>
+  {% endfor %}
+  <button type="submit" class="btn btn-primary">{% trans "Send" %}</button>
+</form>
 {% endblock %}

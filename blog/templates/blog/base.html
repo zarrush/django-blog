@@ -43,10 +43,20 @@
 
   <body>
     {# Simple site navigation; will be styled in the UI phase. #}
-    <nav id="main-nav">
-      <a href="{% url 'blog:post_list' %}">Home</a>
-      <a href="{% url 'blog:post_archive' %}">Archive</a>
-    </nav>
+<nav id="main-nav">
+  <a href="{% url 'pages:home' %}">{% trans "Home" %}</a>
+  <a href="{% url 'blog:post_list' %}">{% trans "Blog" %}</a>
+  <a href="{% url 'pages:about' %}">{% trans "About" %}</a>
+  <a href="{% url 'pages:contact' %}">{% trans "Contact" %}</a>
+  {% if user.is_authenticated %}
+    <form method="post" action="{% url 'accounts:logout' %}" class="nav-logout">
+      {% csrf_token %}
+      <button type="submit">{% trans "Logout" %}</button>
+    </form>
+  {% else %}
+    <a href="{% url 'accounts:auth' %}">{% trans "Login" %}</a>
+  {% endif %}
+</nav>
 
     {% get_current_language as cur %}
     {% get_available_languages as langs %}

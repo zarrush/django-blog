@@ -166,15 +166,18 @@ def post_archive(request):
     return render(request, 'blog/post/archive.html', {'archive': archive})
 
 
-def author_page(request, username):
-    """Show an author's profile info and their published posts."""
-    author = get_object_or_404(User, username=username)
+def author_page(request, author_id):
+    """Display all posts by a specific author."""
+    author = get_object_or_404(User, id=author_id)
     posts = Post.published.filter(author=author)
-
-    return render(request, 'blog/author.html', {
+    
+    # pagination اگه داری
+    paginator = Paginator(posts, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    context = {
         'author': author,
-        'posts': posts,
-        'total_posts': posts.count(),
-        'total_likes': Like.objects.filter(post__author=author).count(),
-    })
-
+        'posts': page_obj,
+    }
+    return render(request, 'blog/post/author.html', context)
