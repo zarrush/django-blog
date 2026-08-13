@@ -1,0 +1,36 @@
+/*
+    variables.css — Design tokens and theme configuration.
+
+    Contains all CSS custom properties used across the project.
+    Theme switching is achieved by overriding these tokens via [data-theme].
+    Typography scale (RTL/LTR) is also defined here.
+*/
+:root {
+/* Color tokens (light theme) */
+    --bg: #ffffff;
+    --text: #1a1a1a;
+    --muted: #6b7280;
+    --card: #f7f7f7;
+    --border: #e5e7eb;
+    --accent: #2563eb;
+    --error: #dc2626;
+
+/* Typography (LTR default) */
+    --font-main: "Inter", "Segoe UI", system-ui, sans-serif;
+
+    color-scheme: light;
+}
+
+html[dir="rtl"] {
+    --font-main: "Vazirmatn", "Tahoma", sans-serif;
+}
+
+[data-theme="dark"] {
+    --bg: #0f172a;
+    --text: #e5e7eb;
+    --muted: #94a3b8;
+    --card: #1e293b;
+    --border: #334155;
+    --accent: #60a5fa;
+    color-scheme: dark;
+}

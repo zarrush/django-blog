@@ -1,0 +1,16 @@
+/*
+    layout.css — Structural page layout and chrome.
+
+    Contains styles for persistent UI elements that appear
+    on every page: navigation, language switcher, sidebar.
+*/
+.lang-switcher a {
+    padding: .25rem .6rem;
+    border-radius: .5rem;
+    text-decoration: none;
+}
+
+.lang-switcher a.active {
+    font-weight: 700;
+    background: #e5e7eb;
+}

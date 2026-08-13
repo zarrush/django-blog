@@ -1,0 +1,11 @@
+/*
+    main.css — Entry point for the entire stylesheet.
+
+    Imports all CSS modules in dependency order.
+    Adding a new module requires only updating this file.
+*/
+@import "variables.css";
+@import "base.css";
+@import "components.css";
+@import "layout.css";
+@import "pages.css";

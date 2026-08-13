@@ -1,0 +1,140 @@
+/*
+    components.css — Reusable UI components.
+
+    Contains all atomic, reusable pieces used across the site:
+        • Buttons
+        • Form fields and error states
+        • Theme toggle icon swap
+        • Post cards and grid
+        • Search bar
+        • Badges and meta info
+        • Flash messages
+*/
+
+/* Theme toggle — icon swap driven by [data-theme] */
+#theme-toggle .icon-sun { display: none; }
+[data-theme="dark"] #theme-toggle .icon-sun { display: inline; }
+[data-theme="dark"] #theme-toggle .icon-moon { display: none; }
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background: var(--accent);
+    color: #fff;
+    width: 100%;
+}
+
+.btn-primary:hover { opacity: 0.9; }
+
+/* Auth forms */
+.auth-container { max-width: 400px; margin: 2rem auto; padding: 1rem; }
+.auth-tabs { display: flex; border-bottom: 2px solid var(--border); margin-bottom: 1.5rem; }
+.auth-tab {
+    flex: 1; text-align: center; padding: 0.75rem;
+    text-decoration: none; color: var(--muted);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px; transition: all 0.2s;
+}
+.auth-tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+    font-weight: 600;
+}
+.auth-form h2 { margin-bottom: 1.5rem; }
+
+/* Form fields */
+.form-field { margin-bottom: 1rem; }
+.form-field label { display: block; margin-bottom: 0.25rem; font-weight: 500; }
+.form-field input {
+    width: 100%; padding: 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--card);
+    color: var(--text);
+}
+.form-field input:focus { outline: none; border-color: var(--accent); }
+.error { display: block; color: var(--error); font-size: 0.875rem; margin-top: 0.25rem; }
+
+/* Post cards */
+.post-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.post-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+.post-image { width: 100%; height: 180px; object-fit: cover; }
+.post-content { padding: 1rem; }
+.post-content h3 { margin: 0 0 0.5rem 0; font-size: 1.25rem; }
+.post-content h3 a { color: var(--text); text-decoration: none; }
+.post-content h3 a:hover { color: var(--accent); }
+.excerpt { color: var(--muted); font-size: 0.95rem; line-height: 1.5; margin: 0.5rem 0; }
+.meta { display: flex; gap: 1rem; color: var(--muted); font-size: 0.85rem; margin: 0.75rem 0; }
+.read-more {
+    display: inline-block; color: var(--accent);
+    text-decoration: none; font-weight: 500; margin-top: 0.5rem;
+}
+.read-more:hover { text-decoration: underline; }
+
+/* Search bar */
+.search-bar { display: flex; gap: .5rem; margin: 0 0 2rem; flex-wrap: wrap; }
+.search-bar input[type="search"] {
+    flex: 1; min-width: 200px; padding: .6rem .9rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--card);
+    color: var(--text);
+}
+.search-bar select {
+    padding: .6rem .75rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--card);
+    color: var(--text);
+}
+
+/* Categories */
+.cat-list { display: flex; gap: .5rem; list-style: none; flex-wrap: wrap; padding: 0; }
+.cat-list a {
+    display: inline-block; padding: .25rem .75rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--accent);
+    text-decoration: none;
+}
+
+/* Flash messages */
+.flash {
+    padding: .5rem .75rem;
+    border-radius: 6px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    margin-bottom: 1rem;
+}
+
+/* Logout button in nav */
+.nav-logout { display: inline; }
+.nav-logout button {
+    background: none; border: none;
+    color: var(--accent); cursor: pointer;
+}
+
+/* Honeypot anti-spam field */
+.hp-field { position: absolute; left: -9999px; height: 0; overflow: hidden; }
+
+/* Like form and avatar */
+.like-form { display: inline; }
+.avatar { border-radius: 50%; }
