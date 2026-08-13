@@ -7,6 +7,17 @@
   <p>{% trans "Thoughts on code, life and everything in between." %}</p>
 </section>
 
+  <form action="{% url 'blog:post_search' %}" method="get" class="search-bar">
+    <input type="search" name="query" placeholder="{% trans 'Search posts...' %}">
+    <select name="category" aria-label="{% trans 'Category' %}">
+      <option value="">{% trans "All categories" %}</option>
+      {% for cat in categories %}
+        <option value="{{ cat.slug }}">{{ cat.name }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
+  </form>
+
 <section class="latest">
   <h2>{% trans "Latest Posts" %}</h2>
   <div class="post-grid">

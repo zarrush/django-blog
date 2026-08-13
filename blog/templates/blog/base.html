@@ -1,6 +1,8 @@
 {% load static %}
 {% load blog_tags %}
 {% load static i18n %}
+{% load cache %}
+
 <!doctype html>
 <html lang="{{ LANGUAGE_CODE }}" 
       dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}"
@@ -21,7 +23,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     {# SEO: every page defines its own title and description. #}
-    <title>{% block title %}{% endblock %} | My Blog</title>
+    <title>{% block title %}{% trans "My Blog" %}{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}{% trans 'A bilingual blog about code, life and building things for the web.' %}{% endblock %}">
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+    <meta property="og:site_name" content="{% trans 'My Blog' %}">
+    <meta property="og:title" content="{% block og_title %}{% trans 'My Blog' %}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{% trans 'A bilingual blog about code, life and building things for the web.' %}{% endblock %}">
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    {% block og_image %}{% endblock %}
+    <meta name="twitter:card" content="summary">
     <meta name="description"
           content="{% block description %}A personal blog about Django, Python and modern web development.{% endblock %}" />
 
@@ -76,6 +87,7 @@
     </div>
 
     <div id="sidebar">
+    {% cache 300 sidebar LANGUAGE_CODE %}
       <h2>My Blog</h2>
       <p>This is my blog. I've written {% total_posts %} posts so far.</p>
 
@@ -89,6 +101,7 @@
           <li><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></li>
         {% endfor %}
       </ul>
+    {% endcache %}
     </div>
     <script>
   document.addEventListener('DOMContentLoaded', function () {

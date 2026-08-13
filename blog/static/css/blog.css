@@ -197,3 +197,15 @@ body { font-family: var(--font-main); }
          border: 1px solid var(--border); margin-bottom: 1rem; }
 .nav-logout { display: inline; }
 .nav-logout button { background: none; border: none; color: var(--accent); cursor: pointer; }
+
+.search-bar { display: flex; gap: .5rem; margin: 0 0 2rem; flex-wrap: wrap; }
+.search-bar input[type="search"] {
+  flex: 1; min-width: 200px; padding: .6rem .9rem;
+  border: 1px solid var(--border); border-radius: 8px;
+  background: var(--card); color: var(--text);
+}
+.search-bar select {
+  padding: .6rem .75rem; border: 1px solid var(--border);
+  border-radius: 8px; background: var(--card); color: var(--text);
+}
+.hp-field { position: absolute; left: -9999px; height: 0; overflow: hidden; }

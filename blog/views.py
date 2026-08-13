@@ -5,10 +5,10 @@ Handles post listing (with tag/category filters), post detail,
 comments, likes, search, archive and author pages.
 """
 
-
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.postgres.search import TrigramSimilarity
+from django.core.cache import cache
 from django.core.paginator import Paginator
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect, render
@@ -26,6 +26,15 @@ POSTS_PER_PAGE = 3
 SIMILAR_POSTS_LIMIT = 4
 RELATED_POSTS_LIMIT = 3
 TRIGRAM_THRESHOLD = 0.1
+COMMENTS_PER_HOUR = 3
+
+
+def get_client_ip(request):
+    """Return the client's IP address."""
+    forwarded = request.META.get("HTTP_X_FORWARDED_FOR")
+    if forwarded:
+        return forwarded.split(",")[0].strip()
+    return request.META.get("REMOTE_ADDR")
 
 
 def post_list(request, tag_slug=None, category_slug=None):
@@ -47,16 +56,14 @@ def post_list(request, tag_slug=None, category_slug=None):
     posts = paginator.get_page(page_number)
 
     return render(request, 'blog/post/list.html', {
-        'posts': posts,
-        'tag': tag,
-        'category': category,
+        'posts': posts, 'tag': tag, 'category': category,
     })
 
 
 def post_detail(request, year, month, day, post):
     """Show a published post with comments, similar and related posts."""
     post = get_object_or_404(
-        Post,
+        Post.published.select_related('author').prefetch_related('tags', 'categories'),
         status=Post.Status.PUBLISHED,
         slug=post,
         publish__year=year,
@@ -66,28 +73,25 @@ def post_detail(request, year, month, day, post):
     comments = post.comments.filter(active=True)
     form = CommentForm()
 
-    # Posts sharing the most tags with the current one.
     post_tag_ids = post.tags.values_list('id', flat=True)
     similar_posts = (
         Post.published.filter(tags__in=post_tag_ids)
         .exclude(id=post.id)
         .annotate(same_tags=Count('tags'))
-        .order_by('-same_tags', '-publish')[:SIMILAR_POSTS_LIMIT]
+        .order_by('-same_tags', '-publish')
+        .select_related('author')[:SIMILAR_POSTS_LIMIT]
     )
-    # Posts from the same categories.
     related_posts = (
         Post.published.filter(categories__in=post.categories.all())
         .exclude(id=post.id)
-        .order_by('-publish')[:RELATED_POSTS_LIMIT]
+        .order_by('-publish')
+        .select_related('author')[:RELATED_POSTS_LIMIT]
     )
     liked = request.user.is_authenticated and post.likes.filter(user=request.user).exists()
 
     return render(request, 'blog/post/detail.html', {
-        'post': post,
-        'comments': comments,
-        'form': form,
-        'similar_posts': similar_posts,
-        'related_posts': related_posts,
+        'post': post, 'comments': comments, 'form': form,
+        'similar_posts': similar_posts, 'related_posts': related_posts,
         'liked': liked,
     })
 
@@ -105,48 +109,61 @@ def post_like(request, post_id):
 
 @require_POST
 def post_comment(request, post_id):
-    """Handle a new comment submission on a published post."""
+    """Handle a new comment with honeypot + rate-limit + moderation."""
     post = get_object_or_404(Post, id=post_id, status=Post.Status.PUBLISHED)
-
-    comment = None
     form = CommentForm(data=request.POST)
 
     if form.is_valid():
+        # Honeypot: bots fill it, humans never see it.
+        if form.cleaned_data.get("website"):
+            return redirect(post.get_absolute_url())
+
+        # Rate limit per IP.
+        key = f"comment-rate:{get_client_ip(request)}"
+        attempts = cache.get(key, 0)
+        if attempts >= COMMENTS_PER_HOUR:
+            return redirect(post.get_absolute_url())
+
         comment = form.save(commit=False)
         comment.post = post
+        # Simple moderation: many links => hold for review.
+        if comment.body.lower().count("http") >= 3:
+            comment.active = False
         comment.save()
+        cache.set(key, attempts + 1, 3600)
+
         return render(request, 'blog/post/comment.html', {
-            'post': post,
-            'form': form,
-            'comment': comment,
+            'post': post, 'form': form, 'comment': comment,
         })
 
-    # Invalid submissions fall back to the post page.
     return redirect(post.get_absolute_url())
 
 
 def post_search(request):
-    """Search published posts by title using trigram similarity."""
-    form = SearchForm()
+    """Search published posts by title, optionally within a category."""
+    form = SearchForm(request.GET or None)
     query = None
+    category = None
     results = []
 
-    if 'query' in request.GET:
-        form = SearchForm(request.GET)
-        if form.is_valid():
-            query = form.cleaned_data['query']
-            results = (
-                Post.published.annotate(
-                    similarity=TrigramSimilarity('title', query),
-                )
+    if form.is_valid():
+        query = form.cleaned_data.get("query")
+        category = form.cleaned_data.get("category")
+        qs = Post.published.select_related('author').prefetch_related('tags', 'categories')
+        if category:
+            qs = qs.filter(categories=category)
+        if query:
+            qs = (
+                qs.annotate(similarity=TrigramSimilarity('title', query))
                 .filter(similarity__gt=TRIGRAM_THRESHOLD)
                 .order_by('-similarity')
             )
+        elif category:
+            qs = qs.order_by('-publish')
+        results = qs
 
     return render(request, 'blog/post/search.html', {
-        'form': form,
-        'query': query,
-        'results': results,
+        'form': form, 'query': query, 'category': category, 'results': results,
     })
 
 
@@ -159,7 +176,7 @@ def post_archive(request):
             'posts': Post.published.filter(
                 publish__year=month_date.year,
                 publish__month=month_date.month,
-            ),
+            ).select_related('author'),
         }
         for month_date in months
     ]
@@ -169,15 +186,14 @@ def post_archive(request):
 def author_page(request, author_id):
     """Display all posts by a specific author."""
     author = get_object_or_404(User, id=author_id)
-    posts = Post.published.filter(author=author)
-    
-    # pagination اگه داری
+    posts = (
+        Post.published.filter(author=author)
+        .select_related('author')
+        .prefetch_related('tags', 'categories')
+    )
     paginator = Paginator(posts, 10)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    
-    context = {
-        'author': author,
-        'posts': page_obj,
-    }
-    return render(request, 'blog/post/author.html', context)
+    page_obj = paginator.get_page(request.GET.get('page'))
+
+    return render(request, 'blog/post/author.html', {
+        'author': author, 'posts': page_obj,
+    })
