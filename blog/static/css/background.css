@@ -1,0 +1,85 @@
+/*
+  background.css — Ambient glossy-blob background scene.
+
+  A fixed, full-viewport canvas with two glossy 3D-like blobs
+  rendered in pure CSS (layered radial gradients + morphing
+  border-radius). No JS, no WebGL, GPU-friendly transforms.
+
+  Motion policy:
+    • Pages with <body class="animate-bg"> (home) → slow drift
+    • All other pages → identical but STATIC composition
+    • prefers-reduced-motion → always static
+*/
+
+.bg-scene {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.blob {
+  position: absolute;
+  width: 55vmax;
+  height: 55vmax;
+  top: -15vmax;
+  right: -12vmax;
+  background:
+    radial-gradient(circle at 32% 28%, var(--blob-hi) 0%, transparent 32%),
+    radial-gradient(circle at 30% 30%, var(--blob-mid) 0%, var(--blob-low) 42%, var(--bg) 74%);
+  border-radius: 58% 42% 55% 45% / 45% 58% 42% 55%;
+  box-shadow:
+    inset 0 0 80px rgba(0, 0, 0, .55),
+    0 0 140px var(--accent-soft);
+}
+
+/* Specular highlight — the "wet" look */
+.blob::after {
+  content: "";
+  position: absolute;
+  inset: 6% 14% 55% 16%;
+  background: radial-gradient(ellipse at 40% 30%, var(--blob-hi), transparent 62%);
+  border-radius: inherit;
+  filter: blur(8px);
+}
+
+.blob--secondary {
+  width: 46vmax;
+  height: 46vmax;
+  top: auto;
+  right: auto;
+  bottom: -20vmax;
+  left: -12vmax;
+  opacity: .85;
+}
+
+/* Motion ONLY on pages that opt in */
+body.animate-bg .blob {
+  animation:
+    blob-morph 26s ease-in-out infinite alternate,
+    blob-drift 44s ease-in-out infinite alternate;
+}
+
+body.animate-bg .blob--secondary {
+  animation-duration: 34s, 56s;
+  animation-direction: alternate-reverse;
+}
+
+@keyframes blob-morph {
+  0%   { border-radius: 58% 42% 55% 45% / 45% 58% 42% 55%; }
+  33%  { border-radius: 45% 55% 48% 52% / 55% 45% 58% 42%; }
+  66%  { border-radius: 52% 48% 42% 58% / 48% 55% 45% 52%; }
+  100% { border-radius: 58% 42% 55% 45% / 45% 58% 42% 55%; }
+}
+
+@keyframes blob-drift {
+  0%   { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
+  50%  { transform: translate3d(-6vmax, 4vmax, 0) rotate(16deg) scale(1.05); }
+  100% { transform: translate3d(3vmax, -3vmax, 0) rotate(-10deg) scale(.97); }
+}
+
+/* Accessibility: never animate for motion-sensitive users */
+@media (prefers-reduced-motion: reduce) {
+  .blob { animation: none !important; }
+}

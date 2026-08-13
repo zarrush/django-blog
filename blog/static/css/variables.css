@@ -5,32 +5,47 @@
     Theme switching is achieved by overriding these tokens via [data-theme].
     Typography scale (RTL/LTR) is also defined here.
 */
+/*
+  variables.css — Design tokens and theme configuration.
+
+  Dark-first palette inspired by the "Pixel Bloom" reference:
+  near-black canvas, charcoal cards, vivid blue accent.
+  Glossy blob gradients are theme-aware via --blob-* tokens.
+*/
 :root {
-/* Color tokens (light theme) */
-    --bg: #ffffff;
-    --text: #1a1a1a;
-    --muted: #6b7280;
-    --card: #f7f7f7;
-    --border: #e5e7eb;
-    --accent: #2563eb;
-    --error: #dc2626;
+  --bg: #050505;
+  --text: #f5f6f7;
+  --muted: #9aa3ad;
+  --card: #16181c;
+  --border: #262a30;
+  --accent: #1f7fd6;
+  --accent-soft: rgba(31, 127, 214, .15);
+  --error: #ef4444;
 
-/* Typography (LTR default) */
-    --font-main: "Inter", "Segoe UI", system-ui, sans-serif;
+  --blob-hi: rgba(255, 255, 255, .25);
+  --blob-mid: #3a3d42;
+  --blob-low: #141518;
 
-    color-scheme: light;
+  --font-main: "Inter", "Segoe UI", system-ui, sans-serif;
+  color-scheme: dark;
 }
 
 html[dir="rtl"] {
-    --font-main: "Vazirmatn", "Tahoma", sans-serif;
+  --font-main: "Vazirmatn", "Tahoma", sans-serif;
 }
 
-[data-theme="dark"] {
-    --bg: #0f172a;
-    --text: #e5e7eb;
-    --muted: #94a3b8;
-    --card: #1e293b;
-    --border: #334155;
-    --accent: #60a5fa;
-    color-scheme: dark;
+[data-theme="light"] {
+  --bg: #f4f5f7;
+  --text: #14161a;
+  --muted: #5c6570;
+  --card: #ffffff;
+  --border: #e2e5ea;
+  --accent: #1f7fd6;
+  --accent-soft: rgba(31, 127, 214, .12);
+  --error: #dc2626;
+
+  --blob-hi: rgba(255, 255, 255, .95);
+  --blob-mid: #e6e8ec;
+  --blob-low: #c6cad1;
+  color-scheme: light;
 }

@@ -11,8 +11,8 @@
 }
 
 body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font-main);
-    line-height: 1.6;
+  background: transparent;   /* ← صحنه پس‌زمینه از پشت دیده می‌شه */
+  color: var(--text);
+  font-family: var(--font-main);
+  line-height: 1.6;
 }

@@ -5,6 +5,7 @@
     Adding a new module requires only updating this file.
 */
 @import "variables.css";
+@import "background.css";
 @import "base.css";
 @import "components.css";
 @import "layout.css";

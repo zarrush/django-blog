@@ -1,44 +1,69 @@
 {% load static i18n blog_tags cache %}
 
 <!doctype html>
-<html lang="{{ LANGUAGE_CODE }}"
-      dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}"
-      data-theme="{{ request.COOKIES.theme|default:'light' }}">
+<html
+  lang="{{ LANGUAGE_CODE }}"
+  dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}"
+  data-theme="{{ request.COOKIES.theme|default:'dark' }}"
+>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     {% if LANGUAGE_BIDI %}
-      <link rel="stylesheet"
-            href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css"
+    />
     {% endif %}
 
     <script>
       (function () {
         var m = document.cookie.match(/(?:^|;\s*)theme=([^;]*)/);
-        var t = m ? m[1] : (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-        document.documentElement.setAttribute('data-theme', t);
+        var t = m
+          ? m[1]
+          : matchMedia("(prefers-color-scheme: light)").matches
+            ? "light"
+            : "dark";
+        document.documentElement.setAttribute("data-theme", t);
       })();
     </script>
 
     <link rel="stylesheet" href="{% static 'css/main.css' %}" />
 
     <title>{% block title %}{% trans "My Blog" %}{% endblock %}</title>
-    <meta name="description"
-          content="{% block meta_description %}{% trans 'A bilingual blog about code, life and building things for the web.' %}{% endblock %}">
-    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+    <meta
+      name="description"
+      content="{% block meta_description %}{% trans 'A bilingual blog about code, life and building things for the web.' %}{% endblock %}"
+    />
+    <link rel="canonical" href="{{ request.build_absolute_uri }}" />
 
-    <meta property="og:site_name"   content="{% trans 'My Blog' %}">
-    <meta property="og:title"       content="{% block og_title %}{% trans 'My Blog' %}{% endblock %}">
-    <meta property="og:description" content="{% block og_description %}{% trans 'A bilingual blog about code, life and building things for the web.' %}{% endblock %}">
-    <meta property="og:type"        content="{% block og_type %}website{% endblock %}">
-    <meta property="og:url"         content="{{ request.build_absolute_uri }}">
+    <meta property="og:site_name" content="{% trans 'My Blog' %}" />
+    <meta
+      property="og:title"
+      content="{% block og_title %}{% trans 'My Blog' %}{% endblock %}"
+    />
+    <meta
+      property="og:description"
+      content="{% block og_description %}{% trans 'A bilingual blog about code, life and building things for the web.' %}{% endblock %}"
+    />
+    <meta
+      property="og:type"
+      content="{% block og_type %}website{% endblock %}"
+    />
+    <meta property="og:url" content="{{ request.build_absolute_uri }}" />
     {% block og_image %}{% endblock %}
 
-    <meta name="twitter:card" content="summary">
+    <meta name="twitter:card" content="summary" />
   </head>
 
-  <body>
+  <body class="{% block body_class %}{% endblock %}">
+    {# Ambient background scene — animated on home, static elsewhere. #}
+    <div class="bg-scene" aria-hidden="true">
+      <div class="blob"></div>
+      <div class="blob blob--secondary"></div>
+    </div>
+
     <nav id="main-nav">
       <a href="{% url 'pages:home' %}">{% trans "Home" %}</a>
       <a href="{% url 'blog:post_list' %}">{% trans "Blog" %}</a>
@@ -46,23 +71,28 @@
       <a href="{% url 'pages:contact' %}">{% trans "Contact" %}</a>
 
       {% if user.is_authenticated %}
-        <form method="post" action="{% url 'accounts:logout' %}" class="nav-logout">
-          {% csrf_token %}
-          <button type="submit">{% trans "Logout" %}</button>
-        </form>
+      <form
+        method="post"
+        action="{% url 'accounts:logout' %}"
+        class="nav-logout"
+      >
+        {% csrf_token %}
+        <button type="submit">{% trans "Logout" %}</button>
+      </form>
       {% else %}
-        <a href="{% url 'accounts:auth' %}">{% trans "Login" %}</a>
+      <a href="{% url 'accounts:auth' %}">{% trans "Login" %}</a>
       {% endif %}
     </nav>
 
-    {% get_current_language as cur %}
-    {% get_available_languages as langs %}
+    {% get_current_language as cur %} {% get_available_languages as langs %}
     <nav class="lang-switcher">
       {% for code, name in langs %}
-        <a href="{% url 'switch_language' code %}?next={{ request.get_full_path|urlencode }}"
-           class="{% if code == cur %}active{% endif %}">
-          {{ code|upper }}
-        </a>
+      <a
+        href="{% url 'switch_language' code %}?next={{ request.get_full_path|urlencode }}"
+        class="{% if code == cur %}active{% endif %}"
+      >
+        {{ code|upper }}
+      </a>
       {% endfor %}
     </nav>
 
@@ -71,36 +101,41 @@
       <span class="icon-sun">☀️</span>
     </button>
 
-    <div id="content">
-      {% block content %}{% endblock %}
-    </div>
+    <div id="content">{% block content %}{% endblock %}</div>
 
     <aside id="sidebar">
       {% cache 300 sidebar LANGUAGE_CODE %}
-        <h2>{% trans "My Blog" %}</h2>
-        <p>{% blocktrans with total=total_posts %}I've written {{ total }} posts so far.{% endblocktrans %}</p>
+      <h2>{% trans "My Blog" %}</h2>
+      <p>
+        {% blocktrans with total=total_posts %}I've written {{ total }} posts so
+        far.{% endblocktrans %}
+      </p>
 
-        <h3>{% trans "Latest posts" %}</h3>
-        {% show_latest_posts 3 %}
+      <h3>{% trans "Latest posts" %}</h3>
+      {% show_latest_posts 3 %}
 
-        <h3>{% trans "Most commented posts" %}</h3>
-        {% get_most_commented_posts as most_commented_posts %}
-        <ul>
-          {% for post in most_commented_posts %}
-            <li><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></li>
-          {% endfor %}
-        </ul>
+      <h3>{% trans "Most commented posts" %}</h3>
+      {% get_most_commented_posts as most_commented_posts %}
+      <ul>
+        {% for post in most_commented_posts %}
+        <li><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></li>
+        {% endfor %}
+      </ul>
       {% endcache %}
     </aside>
 
     <script>
-      document.addEventListener('DOMContentLoaded', function () {
-        var btn = document.getElementById('theme-toggle');
+      document.addEventListener("DOMContentLoaded", function () {
+        var btn = document.getElementById("theme-toggle");
         if (!btn) return;
-        btn.addEventListener('click', function () {
-          var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-          document.documentElement.setAttribute('data-theme', next);
-          document.cookie = 'theme=' + next + ';path=/;max-age=31536000;SameSite=Lax';
+        btn.addEventListener("click", function () {
+          var next =
+            document.documentElement.getAttribute("data-theme") === "dark"
+              ? "light"
+              : "dark";
+          document.documentElement.setAttribute("data-theme", next);
+          document.cookie =
+            "theme=" + next + ";path=/;max-age=31536000;SameSite=Lax";
         });
       });
     </script>
