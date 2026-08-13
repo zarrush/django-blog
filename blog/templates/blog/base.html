@@ -1,141 +1,137 @@
 {% load static i18n blog_tags cache %}
-
 <!doctype html>
-<html
-  lang="{{ LANGUAGE_CODE }}"
-  dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}"
-  data-theme="{{ request.COOKIES.theme|default:'dark' }}"
->
+<html lang="{{ LANGUAGE_CODE }}"
+      dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}"
+      data-theme="{{ request.COOKIES.theme|default:'dark' }}">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-
     {% if LANGUAGE_BIDI %}
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css"
-    />
+      <link rel="stylesheet"
+            href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
     {% endif %}
-
     <script>
       (function () {
         var m = document.cookie.match(/(?:^|;\s*)theme=([^;]*)/);
-        var t = m
-          ? m[1]
-          : matchMedia("(prefers-color-scheme: light)").matches
-            ? "light"
-            : "dark";
-        document.documentElement.setAttribute("data-theme", t);
+        var t = m ? m[1] : (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+        document.documentElement.setAttribute('data-theme', t);
       })();
     </script>
-
     <link rel="stylesheet" href="{% static 'css/main.css' %}" />
-
     <title>{% block title %}{% trans "My Blog" %}{% endblock %}</title>
-    <meta
-      name="description"
-      content="{% block meta_description %}{% trans 'A bilingual blog about code, life and building things for the web.' %}{% endblock %}"
-    />
-    <link rel="canonical" href="{{ request.build_absolute_uri }}" />
-
-    <meta property="og:site_name" content="{% trans 'My Blog' %}" />
-    <meta
-      property="og:title"
-      content="{% block og_title %}{% trans 'My Blog' %}{% endblock %}"
-    />
-    <meta
-      property="og:description"
-      content="{% block og_description %}{% trans 'A bilingual blog about code, life and building things for the web.' %}{% endblock %}"
-    />
-    <meta
-      property="og:type"
-      content="{% block og_type %}website{% endblock %}"
-    />
-    <meta property="og:url" content="{{ request.build_absolute_uri }}" />
+    <meta name="description"
+          content="{% block meta_description %}{% trans 'A bilingual blog about code, life and building things for the web.' %}{% endblock %}">
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+    <meta property="og:site_name"   content="{% trans 'My Blog' %}">
+    <meta property="og:title"       content="{% block og_title %}{% trans 'My Blog' %}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{% trans 'A bilingual blog about code, life and building things for the web.' %}{% endblock %}">
+    <meta property="og:type"        content="{% block og_type %}website{% endblock %}">
+    <meta property="og:url"         content="{{ request.build_absolute_uri }}">
     {% block og_image %}{% endblock %}
-
-    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:card" content="summary">
   </head>
-
   <body class="{% block body_class %}{% endblock %}">
-    {# Ambient background scene — animated on home, static elsewhere. #}
     <div class="bg-scene" aria-hidden="true">
       <div class="blob"></div>
       <div class="blob blob--secondary"></div>
     </div>
+<header class="site-header">
+  <div class="header-inner">
 
-    <nav id="main-nav">
-      <a href="{% url 'pages:home' %}">{% trans "Home" %}</a>
-      <a href="{% url 'blog:post_list' %}">{% trans "Blog" %}</a>
-      <a href="{% url 'pages:about' %}">{% trans "About" %}</a>
-      <a href="{% url 'pages:contact' %}">{% trans "Contact" %}</a>
+    <a href="{% url 'pages:home' %}" class="brand" aria-label="Zevora home">
+      <img src="{% static 'images/logo.svg' %}" alt="" class="brand-logo">
+      <span class="brand-name">Zevora</span>
+    </a>
+
+    <nav class="pill-nav" aria-label="Primary">
+      <a class="pill-link {% if request.resolver_match.view_name == 'pages:about' %}active{% endif %}"
+         href="{% url 'pages:about' %}">{% trans "About us" %}</a>
+      <a class="pill-link {% if request.resolver_match.view_name == 'pages:home' %}active{% endif %}"
+         href="{% url 'pages:home' %}">{% trans "Home" %}</a>
+      <div class="pill-drop">
+        <button class="pill-link" type="button" aria-haspopup="true">
+          {% trans "Pages" %}
+          <svg class="icon icon--sm" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <span class="header-divider" aria-hidden="true"></span>
+        <div class="drop-menu">
+          <a href="{% url 'blog:post_list' %}">{% trans "Blog" %}</a>
+          <a href="{% url 'pages:contact' %}">{% trans "Contact" %}</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="header-actions">
+      <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle theme">
+        <span class="icon-moon">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </span>
+        <span class="icon-sun">
+          <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="4.22" x2="19.78" y2="5.64"/></svg>
+        </span>
+      </button>
+
+      {% get_current_language as cur %}
+      {% get_available_languages as langs %}
+      {% for code, name in langs %}
+        {% if code != cur %}
+          <a class="icon-btn icon-btn--lang" aria-label="Switch language"
+             href="{% url 'switch_language' code %}?next={{ request.get_full_path|urlencode }}">
+            <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            <span class="lang-code">{{ code|upper }}</span>
+          </a>
+        {% endif %}
+      {% endfor %}
 
       {% if user.is_authenticated %}
-      <form
-        method="post"
-        action="{% url 'accounts:logout' %}"
-        class="nav-logout"
-      >
-        {% csrf_token %}
-        <button type="submit">{% trans "Logout" %}</button>
-      </form>
+        <details class="profile-drop">
+          <summary class="profile-chip">
+            {% if user.profile.avatar %}
+              <img class="avatar" src="{{ user.profile.avatar.url }}" alt="">
+            {% else %}
+              <span class="avatar avatar-fallback">{{ user.email|first|upper }}</span>
+            {% endif %}
+            <span class="profile-name">{{ user.username|default:user.email }}</span>
+          </summary>
+          <div class="drop-menu drop-end">
+            <form method="post" action="{% url 'accounts:logout' %}">
+              {% csrf_token %}
+              <button type="submit" class="menu-btn">{% trans "Logout" %}</button>
+            </form>
+          </div>
+        </details>
       {% else %}
-      <a href="{% url 'accounts:auth' %}">{% trans "Login" %}</a>
+        <a class="btn-start" href="{% url 'accounts:auth' %}">{% trans "Start" %}</a>
       {% endif %}
-    </nav>
+    </div>
 
-    {% get_current_language as cur %} {% get_available_languages as langs %}
-    <nav class="lang-switcher">
-      {% for code, name in langs %}
-      <a
-        href="{% url 'switch_language' code %}?next={{ request.get_full_path|urlencode }}"
-        class="{% if code == cur %}active{% endif %}"
-      >
-        {{ code|upper }}
-      </a>
-      {% endfor %}
-    </nav>
-
-    <button id="theme-toggle" type="button" aria-label="Toggle theme">
-      <span class="icon-moon">🌙</span>
-      <span class="icon-sun">☀️</span>
-    </button>
-
-    <div id="content">{% block content %}{% endblock %}</div>
-
+  </div>
+</header>
+    <div id="content">
+      {% block content %}{% endblock %}
+    </div>
     <aside id="sidebar">
       {% cache 300 sidebar LANGUAGE_CODE %}
-      <h2>{% trans "My Blog" %}</h2>
-      <p>
-        {% blocktrans with total=total_posts %}I've written {{ total }} posts so
-        far.{% endblocktrans %}
-      </p>
-
-      <h3>{% trans "Latest posts" %}</h3>
-      {% show_latest_posts 3 %}
-
-      <h3>{% trans "Most commented posts" %}</h3>
-      {% get_most_commented_posts as most_commented_posts %}
-      <ul>
-        {% for post in most_commented_posts %}
-        <li><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></li>
-        {% endfor %}
-      </ul>
+        <h2>{% trans "My Blog" %}</h2>
+        <h3>{% trans "Latest posts" %}</h3>
+        {% show_latest_posts 3 %}
+        <h3>{% trans "Most commented posts" %}</h3>
+        {% get_most_commented_posts as most_commented_posts %}
+        <ul>
+          {% for post in most_commented_posts %}
+            <li><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></li>
+          {% endfor %}
+        </ul>
       {% endcache %}
     </aside>
-
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        var btn = document.getElementById("theme-toggle");
+      document.addEventListener('DOMContentLoaded', function () {
+        var btn = document.getElementById('theme-toggle');
         if (!btn) return;
-        btn.addEventListener("click", function () {
-          var next =
-            document.documentElement.getAttribute("data-theme") === "dark"
-              ? "light"
-              : "dark";
-          document.documentElement.setAttribute("data-theme", next);
-          document.cookie =
-            "theme=" + next + ";path=/;max-age=31536000;SameSite=Lax";
+        btn.addEventListener('click', function () {
+          var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+          document.documentElement.setAttribute('data-theme', next);
+          document.cookie = 'theme=' + next + ';path=/;max-age=31536000;SameSite=Lax';
         });
       });
     </script>

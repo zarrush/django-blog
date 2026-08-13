@@ -1,18 +1,30 @@
 /*
-    base.css — Reset and foundational styles.
+  base.css — Reset and foundational styles.
 
-    Contains global reset, body defaults (background, text, font),
-    and base element behavior (box-sizing, margin/padding zeroing).
+  Contains global reset, body defaults and the inline SVG
+  icon system used with static/icons/sprite.svg.
 */
 * {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
 }
 
 body {
-  background: transparent;   /* ← صحنه پس‌زمینه از پشت دیده می‌شه */
+  background: transparent; /* let the ambient bg-scene show through */
   color: var(--text);
   font-family: var(--font-main);
   line-height: 1.6;
 }
+
+/* Inline SVG icons (stroke inherits currentColor) */
+.icon {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.icon--sm { width: 16px; height: 16px; }

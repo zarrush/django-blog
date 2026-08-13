@@ -1,16 +1,199 @@
 /*
-    layout.css — Structural page layout and chrome.
+  layout.css — Structural page layout and chrome.
 
-    Contains styles for persistent UI elements that appear
-    on every page: navigation, language switcher, sidebar.
+  Contains the sticky glass header: brand, centered pill nav
+  with dropdown, and the actions cluster (theme, language,
+  auth-aware Start/profile chip).
 */
-.lang-switcher a {
-    padding: .25rem .6rem;
-    border-radius: .5rem;
-    text-decoration: none;
+
+/* ---------- Header ---------- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(5, 5, 5, .35);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--glass-border);
+}
+[data-theme="light"] .site-header { background: rgba(255, 255, 255, .55); }
+
+.header-inner {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 14px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
 }
 
-.lang-switcher a.active {
-    font-weight: 700;
-    background: #e5e7eb;
+/* Brand */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--text);
+}
+.brand-icon { color: var(--accent); display: flex; }
+.brand-icon .icon { width: 26px; height: 26px; stroke-width: 2.5; }
+.brand-name { font-size: 1.4rem; font-weight: 700; letter-spacing: .5px; }
+
+/* Pill nav — absolutely centered so Home sits at page center */
+.pill-nav {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 999px;
+  padding: 6px;
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+}
+.pill-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 22px;
+  border-radius: 999px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: .95rem;
+  cursor: pointer;
+  transition: color .2s, background .2s;
+}
+.pill-link:hover { color: var(--text); }
+.pill-link.active { color: var(--text); background: rgba(255, 255, 255, .08); }
+
+/* Dropdown menus */
+.pill-drop, .profile-drop { position: relative; }
+.drop-menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 10px);
+  inset-inline-start: 0;
+  min-width: 160px;
+  background: var(--card);
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  padding: 8px;
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  box-shadow: 0 12px 32px rgba(0, 0, 0, .35);
+}
+.pill-drop:hover .drop-menu,
+.pill-drop:focus-within .drop-menu,
+.profile-drop[open] .drop-menu { display: block; }
+.drop-menu a, .menu-btn {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  background: none;
+  border-radius: 10px;
+  color: var(--text);
+  text-decoration: none;
+  text-align: start;
+  cursor: pointer;
+}
+.drop-menu a:hover, .menu-btn:hover { background: rgba(255, 255, 255, .08); }
+.drop-end { inset-inline-start: auto; inset-inline-end: 0; }
+
+/* Actions cluster */
+.header-actions { display: flex; align-items: center; gap: 10px; }
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--glass-border);
+  background: transparent;
+  color: var(--text);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background .2s;
+}
+.icon-btn:hover { background: rgba(255, 255, 255, .08); }
+.lang-code { font-size: .7rem; color: var(--muted); }
+
+/* Start (guest) */
+.btn-start {
+  padding: 10px 26px;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #0a0a0a;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform .2s;
+}
+.btn-start:hover { transform: scale(1.04); }
+
+/* Profile chip (authenticated) */
+.profile-drop summary { list-style: none; cursor: pointer; }
+.profile-drop summary::-webkit-details-marker { display: none; }
+.profile-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 14px 5px 5px;
+  border-radius: 999px;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+}
+.avatar { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; }
+.avatar-fallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent);
+  color: #fff;
+  font-size: .85rem;
+  font-weight: 700;
+}
+.profile-name {
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text);
+  font-size: .9rem;
+}
+/* Logo — slightly larger */
+.brand-logo {
+  width: 44px;
+  height: 44px;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+/* Vertical divider between action groups */
+.header-divider {
+  width: 1px;
+  height: 24px;
+  background: var(--glass-border);
+}
+
+/* Language button — pill shape so FA/EN never gets clipped */
+.icon-btn--lang {
+  width: auto;
+  padding: 0 14px;
+  border-radius: 999px;
+}
+.lang-code {
+  font-size: .75rem;
+  font-weight: 600;
+  color: var(--text);
 }

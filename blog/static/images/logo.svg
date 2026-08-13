@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240">
+  <rect width="240" height="240" fill="#000000"/>
+  <g fill="#0B67D0">
+    <path id="petal" d="M120 18 C133 18 142 30 142 45 C142 62 130 84 120 96 C110 84 98 62 98 45 C98 30 107 18 120 18 Z"/>
+    <use href="#petal" transform="rotate(36 120 120)"/>
+    <use href="#petal" transform="rotate(72 120 120)"/>
+    <use href="#petal" transform="rotate(108 120 120)"/>
+    <use href="#petal" transform="rotate(144 120 120)"/>
+    <use href="#petal" transform="rotate(180 120 120)"/>
+    <use href="#petal" transform="rotate(216 120 120)"/>
+    <use href="#petal" transform="rotate(252 120 120)"/>
+    <use href="#petal" transform="rotate(288 120 120)"/>
+    <use href="#petal" transform="rotate(324 120 120)"/>
+  </g>
+</svg>

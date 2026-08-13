@@ -28,6 +28,10 @@
 
   --font-main: "Inter", "Segoe UI", system-ui, sans-serif;
   color-scheme: dark;
+
+  --glass: rgba(255, 255, 255, .05);
+  --glass-border: rgba(255, 255, 255, .10);
+  --glass-blur: 12px;
 }
 
 html[dir="rtl"] {
@@ -48,4 +52,7 @@ html[dir="rtl"] {
   --blob-mid: #e6e8ec;
   --blob-low: #c6cad1;
   color-scheme: light;
+
+  --glass: rgba(255, 255, 255, .5);
+  --glass-border: rgba(15, 23, 42, .08);
 }
