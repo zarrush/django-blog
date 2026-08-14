@@ -137,3 +137,104 @@
 /* Like form and avatar */
 .like-form { display: inline; }
 .avatar { border-radius: 50%; }
+/* ---------- Interactive search widget ---------- */
+.search-widget {
+  position: relative;
+  height: 56px;
+  display: flex;
+  justify-content: center;
+  margin: 0 0 3rem;
+}
+
+/* State 1 — glass circle with 1px border */
+.search-toggle {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  color: var(--text);
+  cursor: pointer;
+  transition: opacity .3s, transform .3s;
+}
+.search-toggle:hover { background: rgba(255, 255, 255, .1); }
+
+/* State 2 — expanded bar, 60% of the page */
+.search-box {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%) scale(.6);
+  width: 60%;
+  min-width: 300px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 10px 0 18px;
+  border-radius: 999px;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s, transform .3s;
+}
+.search-widget.open .search-box {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+  pointer-events: auto;
+}
+.search-widget.open .search-toggle {
+  opacity: 0;
+  transform: scale(.6);
+  pointer-events: none;
+}
+
+.search-box-icon { color: var(--muted); flex-shrink: 0; }
+.search-box input[type="search"] {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-size: 1rem;
+  font-family: inherit;
+}
+.search-box input[type="search"]::placeholder { color: var(--muted); }
+
+/* Category select at the trailing end */
+.cat-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  border-inline-start: 1px solid var(--glass-border);
+  padding-inline-start: 12px;
+  flex-shrink: 0;
+}
+.cat-wrap select {
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--muted);
+  font-size: .9rem;
+  font-family: inherit;
+  padding: 8px 26px 8px 4px;
+  cursor: pointer;
+  max-width: 140px;
+}
+.cat-wrap select option { background: var(--card); color: var(--text); }
+.cat-caret {
+  position: absolute;
+  inset-inline-end: 6px;
+  pointer-events: none;
+  color: var(--muted);
+}

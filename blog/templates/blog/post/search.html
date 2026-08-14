@@ -4,27 +4,29 @@
 {% block title %}{% trans "Search" %}{% endblock %}
 
 {% block content %}
-<h1>{% trans "Search" %}</h1>
+  {% include "blog/includes/search_widget.html" with initial_open=True initial_query=query initial_category_slug=category.slug %}
 
-<form action="{% url 'blog:post_search' %}" method="get" class="search-bar">
-  {{ form.query }}
-  {{ form.category }}
-  <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
-</form>
+  {% if query or category %}
+    <h2 class="search-results-title">
+      {% trans "Results" %}{% if query %}: “{{ query }}”{% endif %}
+    </h2>
 
-{% if query or category %}
-  <div class="post-grid">
-    {% for post in results %}
-      <article class="post-card">
-        <div class="post-content">
-          <h3><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h3>
-          <p class="excerpt">{{ post.excerpt|default:post.body|striptags|truncatewords:20 }}</p>
-          <div class="meta"><span>{{ post.publish|date:"M d, Y" }}</span></div>
-        </div>
-      </article>
-    {% empty %}
-      <p>{% trans "No results found. Try different keywords." %}</p>
-    {% endfor %}
-  </div>
-{% endif %}
+    <div class="post-grid">
+      {% for post in results %}
+        <article class="post-card">
+          {% if post.featured_image %}
+            <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="post-image">
+          {% endif %}
+          <div class="post-content">
+            <h3><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h3>
+            <p class="excerpt">{{ post.excerpt|default:post.body|striptags|truncatewords:20 }}</p>
+            <div class="meta"><span>{{ post.publish|date:"M d, Y" }}</span></div>
+            <a href="{{ post.get_absolute_url }}" class="read-more">{% trans "Read more" %} →</a>
+          </div>
+        </article>
+      {% empty %}
+        <p>{% trans "No results found. Try different keywords." %}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
 {% endblock %}

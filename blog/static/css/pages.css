@@ -42,3 +42,9 @@ html[dir="rtl"] .hero-title .script {
     font-size: 1rem;
     line-height: 1.7;
 }
+.search-results-title {
+  text-align: center;
+  color: var(--muted);
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}

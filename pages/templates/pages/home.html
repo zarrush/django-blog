@@ -13,16 +13,27 @@
   </p>
 </section>
 
-  <form action="{% url 'blog:post_search' %}" method="get" class="search-bar">
-    <input type="search" name="query" placeholder="{% trans 'Search posts...' %}">
-    <select name="category" aria-label="{% trans 'Category' %}">
-      <option value="">{% trans "All categories" %}</option>
-      {% for cat in categories %}
-        <option value="{{ cat.slug }}">{{ cat.name }}</option>
-      {% endfor %}
-    </select>
-    <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
+{# Interactive search: glass circle → expands to 60% glass bar #}
+<div class="search-widget" id="search-widget">
+  <button type="button" class="search-toggle" aria-label="{% trans 'Search' %}">
+    <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+  </button>
+
+  <form action="{% url 'blog:post_search' %}" method="get" class="search-box">
+    <svg class="icon search-box-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="search" name="query" placeholder="{% trans 'Search posts...' %}" aria-label="{% trans 'Search posts' %}">
+    <span class="cat-wrap">
+      <select name="category" aria-label="{% trans 'Category' %}">
+        <option value="">{% trans "All" %}</option>
+        {% for cat in categories %}
+          <option value="{{ cat.slug }}">{{ cat.name }}</option>
+        {% endfor %}
+      </select>
+      <svg class="icon icon--sm cat-caret" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </span>
   </form>
+</div>
+{% include "blog/includes/search_widget.html" %}
 
 <section class="latest">
   <h2>{% trans "Latest Posts" %}</h2>

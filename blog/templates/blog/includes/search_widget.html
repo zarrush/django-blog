@@ -1,0 +1,42 @@
+{% load i18n %}
+{# Interactive search widget — shared between home and search pages. #}
+<div class="search-widget {% if initial_open %}open{% endif %}" id="search-widget">
+
+
+  <form action="{% url 'blog:post_search' %}" method="get" class="search-box">
+    <svg class="icon search-box-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="search" name="query" value="{{ initial_query|default:'' }}"
+           placeholder="{% trans 'Search posts...' %}" aria-label="{% trans 'Search posts' %}">
+    <span class="cat-wrap">
+      <select name="category" aria-label="{% trans 'Category' %}">
+        <option value="">{% trans "All" %}</option>
+        {% for cat in categories %}
+          <option value="{{ cat.slug }}" {% if cat.slug == initial_category_slug %}selected{% endif %}>{{ cat.name }}</option>
+        {% endfor %}
+      </select>
+      <svg class="icon icon--sm cat-caret" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </span>
+  </form>
+</div>
+
+<script>
+  (function () {
+    var widget = document.getElementById('search-widget');
+    if (!widget) return;
+    var CLOSE_DELAY = 5000;
+    var timer = null;
+    function openBox() { clearTimeout(timer); widget.classList.add('open'); }
+    function scheduleClose() {
+      clearTimeout(timer);
+      timer = setTimeout(function () {
+        if (!widget.matches(':hover') && !widget.matches(':focus-within')) {
+          widget.classList.remove('open');
+        }
+      }, CLOSE_DELAY);
+    }
+    widget.addEventListener('mouseenter', openBox);
+    widget.addEventListener('focusin', openBox);
+    widget.addEventListener('mouseleave', scheduleClose);
+    widget.addEventListener('focusout', scheduleClose);
+  })();
+</script>

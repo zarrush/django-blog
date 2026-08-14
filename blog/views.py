@@ -163,7 +163,8 @@ def post_search(request):
         results = qs
 
     return render(request, 'blog/post/search.html', {
-        'form': form, 'query': query, 'category': category, 'results': results,
+        "form": form, "query": query, "category": category,
+        "results": results, "categories": Category.objects.all(),
     })
 
 
