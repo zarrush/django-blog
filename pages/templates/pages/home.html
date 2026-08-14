@@ -4,8 +4,13 @@
 
 {% block content %}
 <section class="hero">
-  <h1>{% trans "Welcome to My Blog" %}</h1>
-  <p>{% trans "Thoughts on code, life and everything in between." %}</p>
+  <h1 class="hero-title">
+    <span class="script">{% trans "Insights" %}</span> {% trans "and Tips for" %}<br>
+    {% trans "Smarter" %} <span class="script">{% trans "Writing" %}</span>
+  </h1>
+  <p class="hero-sub">
+    {% trans "Our carefully crafted content spans a diverse range of topics, keeping you informed and inspired." %}
+  </p>
 </section>
 
   <form action="{% url 'blog:post_search' %}" method="get" class="search-bar">
