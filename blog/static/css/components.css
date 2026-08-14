@@ -64,17 +64,87 @@
 .form-field input:focus { outline: none; border-color: var(--accent); }
 .error { display: block; color: var(--error); font-size: 0.875rem; margin-top: 0.25rem; }
 
-/* Post cards */
+/* ---------- Post cards (glass, compact, 3 per row) ---------- */
+.post-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  width: 65%;            /* باریک‌تر، وسط‌چین — مثل نمونه */
+  min-width: 320px;
+  margin: 0 auto 48px;
+}
+
 .post-card {
-    background: var(--glass);
-    backdrop-filter: blur(var(--glass-blur));
-    -webkit-backdrop-filter: blur(var(--glass-blur));
-    border: 1px solid var(--glass-border);
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  overflow: hidden;
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  transition: transform .25s ease, border-color .25s ease;
 }
 .post-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, .28);
 }
+
+.card-media { position: relative; padding: 10px 10px 0; }
+.post-image {
+  display: block;
+  width: 100%;
+  height: 150px;         /* کوتاه‌تر → کارت جمع‌وجورتر */
+  object-fit: cover;
+  border-radius: 12px;
+}
+.post-image--empty {
+  background: linear-gradient(135deg, rgba(255, 255, 255, .08), rgba(255, 255, 255, .02));
+}
+
+.card-badge {
+  position: absolute;
+  top: 20px;
+  inset-inline-start: 20px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: .75rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* Title + Read button: centered, stacked under each other */
+.post-content {
+  padding: 14px 16px 18px;
+  text-align: center;
+}
+.post-content h3 {
+  font-size: .95rem;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-bottom: 12px;
+}
+.post-content h3 a { color: var(--text); text-decoration: none; transition: color .2s; }
+.post-content h3 a:hover { color: var(--accent); }
+
+.read-btn {
+  display: inline-block;
+  padding: 6px 20px;
+  border-radius: 999px;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  color: var(--text);
+  font-size: .8rem;
+  text-decoration: none;
+  transition: background .2s, border-color .2s;
+}
+.read-btn:hover {
+  background: rgba(255, 255, 255, .12);
+  border-color: rgba(255, 255, 255, .3);
+}
+
+@media (max-width: 900px) { .post-grid { width: 90%; grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) { .post-grid { width: 92%; grid-template-columns: 1fr; } }
 .post-image { width: 100%; height: 180px; object-fit: cover; }
 .post-content { padding: 1rem; }
 .post-content h3 { margin: 0 0 0.5rem 0; font-size: 1.25rem; }

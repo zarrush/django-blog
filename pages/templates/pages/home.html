@@ -36,27 +36,24 @@
 {% include "blog/includes/search_widget.html" %}
 
 <section class="latest">
-  <h2>{% trans "Latest Posts" %}</h2>
   <div class="post-grid">
     {% for post in latest_posts %}
       <article class="post-card">
-        {% if post.featured_image %}
-          <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="post-image">
-        {% endif %}
+        <div class="card-media">
+          {% if post.featured_image %}
+            <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="post-image">
+          {% else %}
+            <div class="post-image post-image--empty"></div>
+          {% endif %}
+          {% with first_cat=post.categories.all|first %}
+            {% if first_cat %}
+              <a href="{{ first_cat.get_absolute_url }}" class="card-badge">{{ first_cat.name }}</a>
+            {% endif %}
+          {% endwith %}
+        </div>
         <div class="post-content">
           <h3><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h3>
-          <p class="excerpt">
-            {% if post.excerpt %}
-              {{ post.excerpt }}
-            {% else %}
-              {{ post.body|truncatewords:20|striptags }}
-            {% endif %}
-          </p>
-          <div class="meta">
-            <span class="date">{{ post.publish|date:"M d, Y" }}</span>
-            <span class="author">{{ post.author }}</span>
-          </div>
-          <a href="{{ post.get_absolute_url }}" class="read-more">{% trans "Read more" %} →</a>
+          <a href="{{ post.get_absolute_url }}" class="read-btn">{% trans "Read" %}</a>
         </div>
       </article>
     {% empty %}
