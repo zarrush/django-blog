@@ -110,20 +110,101 @@
     <div id="content">
       {% block content %}{% endblock %}
     </div>
-    <aside id="sidebar">
-      {% cache 300 sidebar LANGUAGE_CODE %}
-        <h2>{% trans "My Blog" %}</h2>
-        <h3>{% trans "Latest posts" %}</h3>
-        {% show_latest_posts 3 %}
-        <h3>{% trans "Most commented posts" %}</h3>
-        {% get_most_commented_posts as most_commented_posts %}
-        <ul>
-          {% for post in most_commented_posts %}
-            <li><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></li>
-          {% endfor %}
-        </ul>
-      {% endcache %}
-    </aside>
+<footer class="site-footer">
+  <div class="footer-inner">
+
+    <div class="footer-col footer-col--main">
+      <section class="footer-card">
+        <h3>{% trans "Main Pages" %}</h3>
+        <nav class="footer-links">
+          <a href="{% url 'pages:home' %}">{% trans "Home" %}</a>
+          <span class="v-line"></span>
+          <a href="{% url 'pages:about' %}">{% trans "About" %}</a>
+          <span class="v-line"></span>
+          <a href="{% url 'pages:contact' %}">{% trans "Contact" %}</a>
+          <span class="v-line"></span>
+          <a href="{% url 'blog:post_list' %}">{% trans "Blog" %}</a>
+        </nav>
+
+        <hr class="footer-hr">
+
+        <h3>{% trans "Explore" %}</h3>
+        <nav class="footer-links">
+          <a href="{% url 'pages:home' %}#categories">{% trans "Categories" %}</a>
+          <span class="v-line"></span>
+          <a href="#">{% trans "Popular Posts" %}</a>
+          <span class="v-line"></span>
+          <a href="{% url 'blog:post_list' %}">{% trans "Latest Posts" %}</a>
+          <span class="v-line"></span>
+          <a href="{% url 'blog:post_archive' %}">{% trans "Archive" %}</a>
+        </nav>
+
+        <hr class="footer-hr">
+
+        <h3>{% trans "Other Pages" %}</h3>
+        <nav class="footer-links">
+          <a href="{% url 'accounts:auth' %}">{% trans "Login" %}</a>
+          <span class="v-line"></span>
+          <a href="{% url 'accounts:auth' %}">{% trans "Sign up" %}</a>
+          <span class="v-line"></span>
+          <a href="{% url 'blog:post_search' %}">{% trans "Search" %}</a>
+        </nav>
+      </section>
+    </div>
+
+    <div class="footer-col">
+      <section class="footer-card">
+        <h3>{% trans "Subscribe" %}</h3>
+        <p class="footer-text">{% trans "Get the latest posts straight into your inbox." %}</p>
+        <form class="subscribe-form" action="" method="get">
+          <input type="email" name="email" placeholder="{% trans 'Your email address' %}" required>
+          <button type="submit" class="sub-btn">{% trans "Subscribe" %}</button>
+        </form>
+      </section>
+
+      <section class="footer-card">
+        <h3 class="brand-line">Zevora</h3>
+        <div class="social-row" dir="ltr">
+          <a class="social-btn" href="https://github.com/" target="_blank" rel="noopener" aria-label="GitHub">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          </a>
+          <a class="social-btn" href="https://x.com/" target="_blank" rel="noopener" aria-label="X">
+            <svg class="icon icon--fill" viewBox="0 0 24 24"><path d="M18.9 1.15h3.68l-8.04 9.19L24 22.85h-7.41l-5.8-7.58-6.64 7.58H.47l8.6-9.83L0 1.15h7.59l5.24 6.93 6.07-6.93zm-1.29 19.5h2.04L6.49 3.24H4.3l13.31 17.41z"/></svg>
+          </a>
+          <a class="social-btn" href="https://linkedin.com/" target="_blank" rel="noopener" aria-label="LinkedIn">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          </a>
+          <a class="social-btn" href="https://instagram.com/" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg class="icon" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+        </div>
+      </section>
+    </div>
+
+  </div>
+
+  <div class="footer-brand">
+    <p class="footer-brand-name"><span class="script">Zevora</span></p>
+    <p class="footer-credit">
+      {% trans "Made by" %}
+      <a href="#" class="script-link">Zara</a>
+      {% trans "at" %}
+      <a href="#" class="script-link">Zush</a>
+    </p>
+  </div>
+
+    <div class="footer-bottom">
+    <div class="footer-bottom-inner">
+      <p>© {% now "Y" %} <span class="brand-mini">Zevora</span> — {% trans "All rights reserved." %}</p>
+      <nav class="footer-bottom-links">
+        <a href="#">{% trans "Privacy Policy" %}</a>
+        <span class="dot">·</span>
+        <a href="#">{% trans "Terms of Service" %}</a>
+      </nav>
+    </div>
+  </div>
+  
+</footer>
     <script>
       document.addEventListener('DOMContentLoaded', function () {
         var btn = document.getElementById('theme-toggle');

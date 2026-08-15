@@ -197,3 +197,131 @@
   font-weight: 600;
   color: var(--text);
 }
+
+/* ---------- Footer (glass cards, 2 columns) ---------- */
+.site-footer { margin-top: 96px; }
+
+.footer-inner {
+  max-width: 1040px;          /* باریک‌تر از قبل */
+  margin: 0 auto;
+  padding: 0 32px;
+  display: grid;
+  grid-template-columns: 1.2fr .8fr;
+  gap: 24px;
+  align-items: stretch;       /* دو ستون هم‌قد */
+}
+.footer-col { display: flex; flex-direction: column; gap: 24px; }
+.footer-col--main .footer-card { flex: 1; } 
+
+.footer-card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 24px;
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+}
+.footer-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 16px; color: var(--text); }
+
+.footer-links { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.footer-links a { color: var(--muted); text-decoration: none; font-size: .9rem; transition: color .2s; }
+.footer-links a:hover { color: var(--text); }
+.v-line { width: 1px; height: 16px; background: var(--glass-border); }
+.footer-hr { border: none; border-top: 1px solid var(--glass-border); width: 80%; margin: 20px 0; }
+
+.footer-text { color: var(--muted); font-size: .9rem; line-height: 1.6; margin-bottom: 16px; }
+
+/* Subscribe */
+.subscribe-form { display: flex; gap: 8px; }
+.subscribe-form input {
+  flex: 1;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--glass-border);
+  background: transparent;
+  color: var(--text);
+  outline: none;
+}
+.subscribe-form input:focus { border-color: var(--accent); }
+.sub-btn {
+  padding: 10px 20px;
+  border-radius: 999px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass);
+  color: var(--text);
+  cursor: pointer;
+  transition: background .2s, border-color .2s;
+}
+.sub-btn:hover { background: rgba(255, 255, 255, .12); border-color: rgba(255, 255, 255, .3); }
+
+
+/* Brand name — centered, 1.5x, blue with a tiny glow */
+.brand-line {
+  font-family: "Caveat", cursive;
+  color: var(--accent);
+  font-size: 2.8rem;
+  text-align: center;
+  text-shadow: 0 2px 10px rgba(31, 127, 214, .35);
+}
+.script-link { font-family: "Caveat", cursive; color: var(--accent); font-size: 1.15em; text-decoration: none; }
+.script-link:hover { text-decoration: underline; }
+
+/* Social icons — lift + brighter border on hover */
+/* Social icons — centered with breathing room */
+.social-row {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+}
+
+.social-btn {
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid var(--glass-border);
+  color: var(--text);
+  transition: transform .2s, border-color .2s;
+}
+/* Social icons — lift + turn blue on hover */
+.social-btn:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255, 255, 255, .35);
+  color: var(--accent);
+}
+.icon--fill { fill: currentColor; stroke: none; }
+
+/* Bottom brand signature */
+.footer-brand { text-align: center; padding: 48px 0 24px; }
+.footer-brand .script { font-family: "Caveat", cursive; color: var(--accent); font-size: 4rem; }
+/* Bottom credit line */
+.footer-credit {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: .95rem;
+}
+@media (max-width: 900px) { .footer-inner { grid-template-columns: 1fr; } }
+/* ---------- Bottom bar ---------- */
+.footer-bottom {
+  border-top: 1px solid var(--glass-border);
+  margin-top: 16px;
+}
+.footer-bottom-inner {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 20px 32px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  color: var(--muted);
+  font-size: .85rem;
+}
+.footer-bottom-links { display: flex; align-items: center; gap: 10px; }
+.footer-bottom-links a { color: var(--muted); text-decoration: none; transition: color .2s; }
+.footer-bottom-links a:hover { color: var(--text); }
+.dot { color: var(--glass-border); }
+.brand-mini { font-family: "Caveat", cursive; color: var(--accent); font-size: 1.15em; }
