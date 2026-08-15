@@ -74,7 +74,8 @@
 .pill-link.active { color: var(--text); background: rgba(255, 255, 255, .08); }
 
 /* Dropdown menus */
-.pill-drop, .profile-drop { position: relative; }
+.pill-drop.open ,
+.profile-drop[open] .drop-menu { display: block; }
 .drop-menu {
   display: none;
   position: absolute;
@@ -89,9 +90,13 @@
   -webkit-backdrop-filter: blur(var(--glass-blur));
   box-shadow: 0 12px 32px rgba(0, 0, 0, .35);
 }
-.pill-drop:hover .drop-menu,
-.pill-drop:focus-within .drop-menu,
-.profile-drop[open] .drop-menu { display: block; }
+
+.pill-drop { position: relative; }
+.pill-drop .drop-menu {
+  top: calc(100% + 10px);
+  inset-inline-start: 0;
+}
+
 .drop-menu a, .menu-btn {
   display: block;
   width: 100%;
@@ -325,3 +330,33 @@
 .footer-bottom-links a:hover { color: var(--text); }
 .dot { color: var(--glass-border); }
 .brand-mini { font-family: "Caveat", cursive; color: var(--accent); font-size: 1.15em; }
+
+.to-top {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  bottom: 20px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--glass-border);
+  background: var(--glass);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .3s, transform .3s, visibility .3s, color .2s, border-color .2s;
+  z-index: 90;
+}
+.to-top .icon { width: 16px; height: 16px; }
+.to-top.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+.to-top:hover { color: var(--accent); border-color: rgba(255, 255, 255, .35); }

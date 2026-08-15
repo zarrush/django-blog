@@ -62,12 +62,5 @@
   </div>
 </section>
 
-<section id="categories" class="cats">
-  <h2>{% trans "Categories" %}</h2>
-  <ul class="cat-list">
-    {% for cat in categories %}
-      <li><a href="{{ cat.get_absolute_url }}">{{ cat.name }}</a></li>
-    {% endfor %}
-  </ul>
-</section>
+
 {% endblock %}

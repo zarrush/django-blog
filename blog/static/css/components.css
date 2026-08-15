@@ -277,7 +277,8 @@
   font-size: 1rem;
   font-family: inherit;
 }
-.search-box input[type="search"]::placeholder { color: var(--muted); }
+
+.search-box input:focus::placeholder { color: transparent; }
 
 /* Category select at the trailing end */
 .cat-wrap {
