@@ -43,7 +43,7 @@ def auth_view(request):
                 return redirect("accounts:auth")
         else:
             form_signup = SignupForm()
-            form_login = LoginForm(request, data=request.POST)
+            form_login = LoginForm(data=request.POST)
             if form_login.is_valid():
                 user = form_login.get_user()
                 if not user.is_active:

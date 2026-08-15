@@ -74,7 +74,7 @@
 .pill-link.active { color: var(--text); background: rgba(255, 255, 255, .08); }
 
 /* Dropdown menus */
-.pill-drop.open ,
+.pill-drop.open .drop-menu,
 .profile-drop[open] .drop-menu { display: block; }
 .drop-menu {
   display: none;

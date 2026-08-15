@@ -91,7 +91,7 @@
             {% else %}
               <span class="avatar avatar-fallback">{{ user.email|first|upper }}</span>
             {% endif %}
-            <span class="profile-name">{{ user.username|default:user.email }}</span>
+            <span class="profile-name">{% firstof user.get_full_name user.username user.email %}</span>
           </summary>
           <div class="drop-menu drop-end">
             <form method="post" action="{% url 'accounts:logout' %}">

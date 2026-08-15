@@ -1,15 +1,12 @@
-"""Authentication forms with email as identifier."""
+"""Authentication forms: signup with full name, login with username + email + password."""
 from django import forms
-from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import AuthenticationForm
 from django.utils.translation import gettext_lazy as _
 
-
-User = get_user_model()
+from .models import User
 
 
 class SignupForm(forms.ModelForm):
-    """User registration form with email and password."""
+    """Registration: username, email, full name and password."""
 
     password1 = forms.CharField(
         label=_("Password"),
@@ -22,11 +19,14 @@ class SignupForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ("email", "username")
+        fields = ("username", "email", "first_name", "last_name")
         widgets = {
-            "email": forms.EmailInput(attrs={"autocomplete": "email"}),
             "username": forms.TextInput(attrs={"autocomplete": "username"}),
+            "email": forms.EmailInput(attrs={"autocomplete": "email"}),
         }
+
+    # ترتیب نمایش فیلدها (پسوردها آخر)
+    field_order = ("username", "email", "first_name", "last_name", "password1", "password2")
 
     def clean_email(self):
         email = self.cleaned_data.get("email")
@@ -50,10 +50,37 @@ class SignupForm(forms.ModelForm):
         return user
 
 
-class LoginForm(AuthenticationForm):
-    """Login form using email instead of username."""
+class LoginForm(forms.Form):
+    """Login requires all three: username + email + password."""
 
-    username = forms.EmailField(
-        label=_("Email"),
-        widget=forms.EmailInput(attrs={"autofocus": True, "autocomplete": "email"}),
+    username = forms.CharField(
+        label=_("Username"),
+        widget=forms.TextInput(attrs={"autofocus": True, "autocomplete": "username"}),
     )
+    email = forms.EmailField(
+        label=_("Email"),
+        widget=forms.EmailInput(attrs={"autocomplete": "email"}),
+    )
+    password = forms.CharField(
+        label=_("Password"),
+        widget=forms.PasswordInput(attrs={"autocomplete": "current-password"}),
+    )
+
+    def clean(self):
+        cleaned = super().clean()
+        username = cleaned.get("username")
+        email = cleaned.get("email")
+        password = cleaned.get("password")
+        if not (username and email and password):
+            return cleaned
+        try:
+            user = User.objects.get(username__iexact=username, email__iexact=email)
+        except User.DoesNotExist:
+            raise forms.ValidationError(_("Invalid username, email or password."))
+        if not user.check_password(password):
+            raise forms.ValidationError(_("Invalid username, email or password."))
+        self.user = user
+        return cleaned
+
+    def get_user(self):
+        return getattr(self, "user", None)
