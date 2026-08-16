@@ -9,8 +9,8 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.postgres.search import TrigramSimilarity
 from django.core.cache import cache
-from django.core.paginator import Paginator
-from django.db.models import Count
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Count, F, Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 
@@ -37,26 +37,41 @@ def get_client_ip(request):
     return request.META.get("REMOTE_ADDR")
 
 
-def post_list(request, tag_slug=None, category_slug=None):
-    """List published posts, optionally filtered by tag or category."""
-    posts = Post.published.select_related('author').prefetch_related('tags', 'categories')
+def post_list(request):
+    """Blog main page: search (title+tags), popular/latest modes, pagination."""
+    q = request.GET.get("q", "").strip()
+    mode = request.GET.get("mode", "latest")
 
-    tag = None
-    if tag_slug:
-        tag = get_object_or_404(Tag, slug=tag_slug)
-        posts = posts.filter(tags__in=[tag])
+    posts = Post.published.all()
 
-    category = None
-    if category_slug:
-        category = get_object_or_404(Category, slug=category_slug)
-        posts = posts.filter(categories__in=[category])
+    if q:
+        posts = posts.filter(
+            Q(title__icontains=q) | Q(tags__name__icontains=q)
+        ).distinct()
 
-    paginator = Paginator(posts, POSTS_PER_PAGE)
-    page_number = request.GET.get('page', 1)
-    posts = paginator.get_page(page_number)
+    if mode == "popular":
+        posts = (
+            posts
+            .annotate(n_likes=Count("likes", distinct=True),
+                      n_comments=Count("comments", distinct=True))
+            .annotate(score=F("n_likes") + F("n_comments"))
+            .order_by("-score", "-publish")
+        )
+    else:
+        posts = posts.order_by("-publish")
 
-    return render(request, 'blog/post/list.html', {
-        'posts': posts, 'tag': tag, 'category': category,
+    paginator = Paginator(posts, 6)
+    try:
+        page_obj = paginator.page(request.GET.get("page"))
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
+
+    return render(request, "blog/post/list.html", {
+        "page_obj": page_obj,
+        "q": q,
+        "mode": mode,
     })
 
 
