@@ -1,0 +1,135 @@
+/*
+  panel.css — User panel & profile edit pages.
+*/
+
+/* Panel header */
+.panel-header {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 32px;
+  background: var(--glass);
+  border-bottom: 1px solid var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+}
+.panel-header-group { display: flex; align-items: center; gap: 14px; }
+.panel-date { color: var(--muted); font-size: .9rem; }
+.panel-welcome { color: var(--muted); font-size: .95rem; }
+.panel-welcome span { color: var(--text); font-weight: 600; }
+
+/* Layout */
+.panel-layout {
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+/* Sidebar */
+.panel-sidebar {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 20px;
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  position: sticky;
+  top: 76px;
+}
+.panel-nav { display: flex; flex-direction: column; gap: 6px; }
+.panel-brand {
+  display: flex; align-items: center; gap: 10px;
+  color: var(--text); font-weight: 700; text-decoration: none;
+  padding-bottom: 14px; margin-bottom: 10px;
+  border-bottom: 1px solid var(--glass-border);
+}
+.panel-link { padding: 10px 12px; border-radius: 10px; color: var(--muted); text-decoration: none; transition: .2s; }
+.panel-link:hover { color: var(--text); background: rgba(255, 255, 255, .06); }
+.panel-link.active { color: var(--text); background: rgba(255, 255, 255, .08); }
+.panel-logout-form { margin-top: 14px; }
+.panel-logout {
+  width: 100%; padding: 10px; border-radius: 10px;
+  border: 1px solid rgba(255, 107, 107, .4);
+  background: rgba(255, 107, 107, .12);
+  color: #ff6b6b; font-weight: 600; cursor: pointer;
+  transition: .2s;
+}
+.panel-logout:hover { background: rgba(255, 107, 107, .22); }
+
+/* Cards */
+.glass-card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 28px;
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+}
+.profile-card { text-align: center; }
+.profile-avatar {
+  width: 96px; height: 96px; border-radius: 50%;
+  object-fit: cover; border: 2px solid var(--glass-border);
+}
+.profile-avatar.big { width: 120px; height: 120px; }
+.avatar-fallback {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--accent); color: #fff; font-weight: 700;
+}
+.profile-idline { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 16px; }
+.profile-idline h2 { color: var(--text); }
+.role-badge { padding: 4px 12px; border-radius: 999px; font-size: .75rem; font-weight: 600; }
+.role-member { background: rgba(255, 255, 255, .08); color: var(--muted); }
+.role-author { background: rgba(31, 127, 214, .15); color: var(--accent); }
+.role-owner  { background: rgba(255, 193, 7, .15);  color: #ffc107; }
+.profile-bio { color: var(--muted); line-height: 1.7; max-width: 520px; margin: 16px auto 0; }
+.profile-socials { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; align-items: center; }
+.social-line { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: .9rem; }
+.social-line .icon { color: var(--accent); }
+.panel-edit-btn { display: inline-block; width: auto; padding: 10px 28px; margin-top: 24px; text-decoration: none; }
+
+/* Lists */
+.panel-list { margin-top: 24px; }
+.panel-list h3 { color: var(--text); margin-bottom: 14px; }
+.panel-row {
+  display: flex; justify-content: space-between; gap: 12px;
+  padding: 10px 12px; border-radius: 10px;
+  color: var(--text); text-decoration: none;
+}
+.panel-row:hover { background: rgba(255, 255, 255, .06); }
+.row-meta { color: var(--muted); font-size: .8rem; white-space: nowrap; }
+.empty { color: var(--muted); }
+
+/* Edit form */
+.edit-form { max-width: 640px; margin: 40px auto; }
+.avatar-edit { position: relative; width: 120px; margin: 0 auto 24px; }
+.camera-btn {
+  position: absolute; bottom: 6px; inset-inline-end: 6px;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--accent); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+}
+.hidden-input input { display: none; }
+.edit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
+.edit-field { margin-bottom: 16px; }
+.edit-field label { display: block; font-size: .8rem; color: var(--muted); margin-bottom: 6px; }
+.edit-field input, .edit-field textarea {
+  width: 100%; padding: 12px 14px;
+  border-radius: 12px; border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, .04);
+  color: var(--text); outline: none;
+  font-family: inherit; font-size: .95rem;
+  transition: border-color .2s;
+}
+.edit-field input:focus, .edit-field textarea:focus { border-color: var(--accent); }
+.edit-field input:disabled { opacity: .6; }
+.edit-section { color: var(--text); margin: 8px 0 16px; }
+
+@media (max-width: 900px) {
+  .panel-layout { grid-template-columns: 1fr; }
+  .panel-sidebar { position: static; }
+  .edit-grid { grid-template-columns: 1fr; }
+}

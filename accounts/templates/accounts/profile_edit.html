@@ -1,0 +1,52 @@
+{% extends "blog/base.html" %}
+{% load i18n %}
+
+{% block header %}{% include "accounts/includes/panel_header.html" %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data" class="glass-card edit-form">
+  {% csrf_token %}
+
+  <div class="avatar-edit">
+    {% if user.profile.avatar %}
+      <img class="profile-avatar big" src="{{ user.profile.avatar.url }}" alt="">
+    {% else %}
+      <span class="profile-avatar big avatar-fallback">{{ user.email|first|upper }}</span>
+    {% endif %}
+    <label for="id_avatar" class="camera-btn" aria-label="{% trans 'Change photo' %}">
+      <svg class="icon icon--sm" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+    </label>
+    <div class="hidden-input">{{ form.avatar }}</div>
+  </div>
+
+  <div class="edit-grid">
+    <div class="edit-field"><label>{% trans "First name" %}</label>{{ form.first_name }}</div>
+    <div class="edit-field"><label>{% trans "Last name" %}</label>{{ form.last_name }}</div>
+    <div class="edit-field"><label>{% trans "Username" %}</label>{{ form.username }}</div>
+    <div class="edit-field"><label>{% trans "Email" %}</label>{{ form.email }}</div>
+    <div class="edit-field"><label>{% trans "Birthday" %}</label>{{ form.birthday }}</div>
+    <div class="edit-field"><label>{% trans "Role" %}</label>
+      <input type="text" value="{% if user.role == 'owner' %}{% trans 'Owner' %}{% elif user.role == 'author' %}{% trans 'Author' %}{% else %}{% trans 'Member' %}{% endif %}" disabled>
+    </div>
+  </div>
+
+  <div class="edit-field"><label>{% trans "About me" %}</label>{{ form.bio }}</div>
+
+  <h3 class="edit-section">{% trans "Connections" %}</h3>
+  <div class="edit-grid">
+    <div class="edit-field"><label>Telegram</label>{{ form.telegram }}</div>
+    <div class="edit-field"><label>WhatsApp</label>{{ form.whatsapp }}</div>
+    <div class="edit-field"><label>Instagram</label>{{ form.instagram }}</div>
+    <div class="edit-field"><label>X / Twitter</label>{{ form.twitter }}</div>
+    <div class="edit-field"><label>Facebook</label>{{ form.facebook }}</div>
+    <div class="edit-field"><label>{% trans "Website" %}</label>{{ form.website }}</div>
+  </div>
+
+  {% if form.non_field_errors %}
+    <div class="auth-errors">{% for e in form.non_field_errors %}<span>{{ e }}</span>{% endfor %}</div>
+  {% endif %}
+
+  <button type="submit" class="btn-auth">{% trans "Save changes" %}</button>
+</form>
+{% endblock %}

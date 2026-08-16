@@ -3,7 +3,7 @@ from django import forms
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
-from .models import User
+from .models import Profile, User
 
 
 class SignupForm(forms.ModelForm):
@@ -87,3 +87,44 @@ class LoginForm(forms.Form):
 
     def get_user(self):
         return getattr(self, "user", None)
+
+class ProfileEditForm(forms.ModelForm):
+    """Edit profile: user fields + profile fields in one form."""
+
+    first_name = forms.CharField(max_length=50, required=False, label=_("First name"))
+    last_name = forms.CharField(max_length=50, required=False, label=_("Last name"))
+    username = forms.CharField(max_length=150, required=False, label=_("Username"))
+    email = forms.EmailField(label=_("Email"))
+
+    class Meta:
+        model = Profile
+        fields = ("avatar", "birthday", "bio", "telegram", "whatsapp",
+                  "instagram", "twitter", "facebook", "website")
+        widgets = {
+            "birthday": forms.DateInput(attrs={"type": "date"}),
+            "bio": forms.Textarea(attrs={"rows": 4}),
+        }
+
+    def clean_email(self):
+        email = self.cleaned_data["email"].lower()
+        if User.objects.filter(email__iexact=email).exclude(pk=self.instance.user.pk).exists():
+            raise forms.ValidationError(_("This email is already in use."))
+        return email
+
+    def clean_username(self):
+        username = self.cleaned_data.get("username", "").strip()
+        if username and User.objects.filter(username__iexact=username).exclude(pk=self.instance.user.pk).exists():
+            raise forms.ValidationError(_("This username is taken."))
+        return username
+
+    def save(self, commit=True):
+        profile = super().save(commit=False)
+        user = profile.user
+        user.first_name = self.cleaned_data.get("first_name", "")
+        user.last_name = self.cleaned_data.get("last_name", "")
+        user.username = self.cleaned_data.get("username", "")
+        user.email = self.cleaned_data["email"]
+        if commit:
+            user.save()
+            profile.save()
+        return profile

@@ -38,6 +38,17 @@ class User(AbstractUser):
     REQUIRED_FIELDS = []
 
     objects = UserManager()
+    @property
+    def role(self):
+        if self.is_superuser:
+            return "owner"
+        if self.is_staff:
+            return "author"
+        return "member"
+
+    @property
+    def display_name(self):
+        return self.get_full_name() or self.username or self.email
 
     def __str__(self):
         return self.email
@@ -61,6 +72,14 @@ class Profile(models.Model):
     theme = models.CharField(max_length=10, choices=Theme.choices, blank=True, default="")
     preferred_language = models.CharField(max_length=5, blank=True, default="")
     created = models.DateTimeField(auto_now_add=True)
+
+    birthday = models.DateField(null=True, blank=True)
+    telegram = models.CharField(max_length=100, blank=True)
+    instagram = models.CharField(max_length=100, blank=True)
+    twitter = models.CharField(max_length=100, blank=True)
+    facebook = models.CharField(max_length=100, blank=True)
+    whatsapp = models.CharField(max_length=100, blank=True)
+    website = models.URLField(blank=True)
 
     def __str__(self):
         return f"{self.user} profile"

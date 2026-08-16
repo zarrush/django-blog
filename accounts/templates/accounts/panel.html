@@ -1,0 +1,113 @@
+{% extends "blog/base.html" %}
+{% load static i18n %}
+
+{% block header %}{% include "accounts/includes/panel_header.html" %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block content %}
+<div class="panel-layout">
+
+  <aside class="panel-sidebar">
+    <a class="panel-brand" href="{% url 'pages:home' %}">
+      <img src="{% static 'images/logo.svg' %}" alt="" class="brand-logo">
+      <span>Zevora</span>
+    </a>
+    <nav class="panel-nav">
+      <a class="panel-link" href="{% url 'pages:home' %}">{% trans "Back to home" %}</a>
+      {% if user.is_staff %}
+        <a class="panel-link {% if tab == 'posts' %}active{% endif %}" href="?tab=posts">{% trans "Posts" %}</a>
+      {% else %}
+        <a class="panel-link {% if tab == 'comments' %}active{% endif %}" href="?tab=comments">{% trans "Comments" %}</a>
+      {% endif %}
+      <a class="panel-link {% if tab == 'likes' %}active{% endif %}" href="?tab=likes">{% trans "Likes" %}</a>
+      <form method="post" action="{% url 'accounts:logout' %}" class="panel-logout-form">
+        {% csrf_token %}
+        <button type="submit" class="panel-logout">{% trans "Log out" %}</button>
+      </form>
+    </nav>
+  </aside>
+
+  <main class="panel-main">
+    <section class="glass-card profile-card">
+      {% if user.profile.avatar %}
+        <img class="profile-avatar" src="{{ user.profile.avatar.url }}" alt="">
+      {% else %}
+        <span class="profile-avatar avatar-fallback">{{ user.email|first|upper }}</span>
+      {% endif %}
+
+      <div class="profile-idline">
+        <h2>{{ user.display_name }}</h2>
+        {% if user.role == "owner" %}
+          <span class="role-badge role-owner">{% trans "Owner" %}</span>
+        {% elif user.role == "author" %}
+          <span class="role-badge role-author">{% trans "Author" %}</span>
+        {% else %}
+          <span class="role-badge role-member">{% trans "Member" %}</span>
+        {% endif %}
+      </div>
+
+      {% if user.profile.bio %}
+        <p class="profile-bio">{{ user.profile.bio|linebreaksbr }}</p>
+      {% endif %}
+
+      <div class="profile-socials">
+        <div class="social-line">
+          <svg class="icon icon--sm" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,6 12,13 2,6"/></svg>
+          <span>{{ user.email }}</span>
+        </div>
+        {% if user.is_staff %}
+          {% if user.profile.instagram %}<div class="social-line"><span>Instagram</span><span>{{ user.profile.instagram }}</span></div>{% endif %}
+          {% if user.profile.twitter %}<div class="social-line"><span>X / Twitter</span><span>{{ user.profile.twitter }}</span></div>{% endif %}
+          {% if user.profile.facebook %}<div class="social-line"><span>Facebook</span><span>{{ user.profile.facebook }}</span></div>{% endif %}
+          {% if user.profile.website %}<div class="social-line"><span>Website</span><span>{{ user.profile.website }}</span></div>{% endif %}
+        {% endif %}
+      </div>
+
+      <a href="{% url 'accounts:profile_edit' %}" class="btn-auth panel-edit-btn">{% trans "Edit profile" %}</a>
+    </section>
+
+    {% if tab == "posts" and user.is_staff %}
+      <section class="glass-card panel-list">
+        <h3>{% trans "My posts" %}</h3>
+        {% for p in my_posts %}
+          <a class="panel-row" href="{{ p.get_absolute_url }}">
+            <span>{{ p.title }}</span>
+            <span class="row-meta">{{ p.get_status_display }} · {{ p.publish|date:"M d, Y" }}</span>
+          </a>
+        {% empty %}
+          <p class="empty">{% trans "No posts yet." %}</p>
+        {% endfor %}
+      </section>
+    {% endif %}
+
+    {% if tab == "comments" and not user.is_staff %}
+      <section class="glass-card panel-list">
+        <h3>{% trans "My comments" %}</h3>
+        {% for c in my_comments %}
+          <div class="panel-row">
+            <span>{{ c.body|truncatewords:20 }}</span>
+            <a class="row-meta" href="{{ c.post.get_absolute_url }}">{{ c.post.title }}</a>
+          </div>
+        {% empty %}
+          <p class="empty">{% trans "No comments yet." %}</p>
+        {% endfor %}
+      </section>
+    {% endif %}
+
+    {% if tab == "likes" %}
+      <section class="glass-card panel-list">
+        <h3>{% trans "Liked posts" %}</h3>
+        {% for like in liked %}
+          <a class="panel-row" href="{{ like.post.get_absolute_url }}">
+            <span>{{ like.post.title }}</span>
+            <span class="row-meta">{{ like.created|date:"M d, Y" }}</span>
+          </a>
+        {% empty %}
+          <p class="empty">{% trans "No likes yet." %}</p>
+        {% endfor %}
+      </section>
+    {% endif %}
+  </main>
+
+</div>
+{% endblock %}

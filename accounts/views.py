@@ -104,3 +104,57 @@ def _send_confirmation_email(request, user):
         [user.email],
         html_message=html_message,
     )
+from datetime import date
+import jdatetime
+from blog.models import Comment, Like
+from .forms import ProfileEditForm
+
+
+def _panel_context(request):
+    """Shared panel header data: Jalali date for fa, Gregorian otherwise."""
+    today = date.today()
+    if request.LANGUAGE_CODE.startswith("fa"):
+        jd = jdatetime.date.fromgregorian(date=today)
+        date_str = jd.strftime("%d %B %Y")
+    else:
+        date_str = today.strftime("%d %B %Y")
+    return {"date_str": date_str}
+
+
+@login_required
+def user_panel(request):
+    """User panel: profile card + posts/comments/likes tabs."""
+    context = _panel_context(request)
+    context["tab"] = request.GET.get("tab", "profile")
+    user = request.user
+    if user.is_staff:
+        context["my_posts"] = user.blog_posts.all()
+    else:
+        context["my_comments"] = Comment.objects.filter(email__iexact=user.email, active=True)
+    context["liked"] = Like.objects.filter(user=user).select_related("post")
+    return render(request, "accounts/panel.html", context)
+
+
+@login_required
+def profile_edit(request):
+    """Edit profile page."""
+    profile = request.user.profile
+    if request.method == "POST":
+        form = ProfileEditForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            messages.success(request, _("Profile updated."))
+            return redirect("accounts:panel")
+    else:
+        form = ProfileEditForm(
+            instance=profile,
+            initial={
+                "first_name": request.user.first_name,
+                "last_name": request.user.last_name,
+                "username": request.user.username,
+                "email": request.user.email,
+            },
+        )
+    context = _panel_context(request)
+    context["form"] = form
+    return render(request, "accounts/profile_edit.html", context)

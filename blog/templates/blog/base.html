@@ -35,6 +35,7 @@
       <div class="blob"></div>
       <div class="blob blob--secondary"></div>
     </div>
+{% block header %}
 <header class="site-header">
   <div class="header-inner">
 
@@ -84,22 +85,14 @@
       {% endfor %}
 
       {% if user.is_authenticated %}
-        <details class="profile-drop">
-          <summary class="profile-chip">
-            {% if user.profile.avatar %}
-              <img class="avatar" src="{{ user.profile.avatar.url }}" alt="">
-            {% else %}
-              <span class="avatar avatar-fallback">{{ user.email|first|upper }}</span>
-            {% endif %}
-            <span class="profile-name">{% firstof user.get_full_name user.username user.email %}</span>
-          </summary>
-          <div class="drop-menu drop-end">
-            <form method="post" action="{% url 'accounts:logout' %}">
-              {% csrf_token %}
-              <button type="submit" class="menu-btn">{% trans "Logout" %}</button>
-            </form>
-          </div>
-        </details>
+<a class="profile-chip" href="{% url 'accounts:panel' %}">
+  {% if user.profile.avatar %}
+    <img class="avatar" src="{{ user.profile.avatar.url }}" alt="">
+  {% else %}
+    <span class="avatar avatar-fallback">{{ user.email|first|upper }}</span>
+  {% endif %}
+  <span class="profile-name">{% firstof user.get_full_name user.username user.email %}</span>
+</a>
       {% else %}
         <a class="btn-start" href="{% url 'accounts:auth' %}">{% trans "Start" %}</a>
       {% endif %}
@@ -107,9 +100,12 @@
 
   </div>
 </header>
+{% endblock %}
+
     <div id="content">
       {% block content %}{% endblock %}
     </div>
+{% block footer %}
 <footer class="site-footer">
   <div class="footer-inner">
 
@@ -205,6 +201,7 @@
   </div>
   
 </footer>
+{% endblock %}
 <button id="to-top" class="to-top" aria-label="Back to top">
   <svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
 </button>
