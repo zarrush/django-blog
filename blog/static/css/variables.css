@@ -29,6 +29,8 @@
   --font-main: "Inter", "Segoe UI", system-ui, sans-serif;
   color-scheme: dark;
 
+  --label-bg: #14171c;
+
   --glass: rgba(255, 255, 255, .05);
   --glass-border: rgba(255, 255, 255, .10);
   --glass-blur: 12px;
@@ -47,6 +49,8 @@ html[dir="rtl"] {
   --accent: #1f7fd6;
   --accent-soft: rgba(31, 127, 214, .12);
   --error: #dc2626;
+
+  --label-bg: #ffffff;
 
   --blob-hi: rgba(255, 255, 255, .95);
   --blob-mid: #e6e8ec;

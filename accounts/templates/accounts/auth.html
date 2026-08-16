@@ -1,65 +1,113 @@
 {% extends "blog/base.html" %}
 {% load i18n %}
 
+{% block title %}{% trans "Sign In" %} / {% trans "Sign Up" %}{% endblock %}
+
 {% block content %}
 <div class="auth-container">
   <div class="auth-tabs">
-    <a href="?tab=login" class="auth-tab {% if active_tab == 'login' %}active{% endif %}">
-      {% trans "Login" %}
-    </a>
-    <a href="?tab=signup" class="auth-tab {% if active_tab == 'signup' %}active{% endif %}">
-      {% trans "Sign Up" %}
-    </a>
+    <a href="?tab=login" class="auth-tab {% if active_tab == 'login' %}active{% endif %}">{% trans "Sign In" %}</a>
+    <a href="?tab=signup" class="auth-tab {% if active_tab == 'signup' %}active{% endif %}">{% trans "Sign Up" %}</a>
   </div>
 
   {% if active_tab == 'login' %}
     <form method="post" class="auth-form">
       {% csrf_token %}
-      <h2>{% trans "Login" %}</h2>
-      {% for field in form_login %}
-        <div class="form-field">
-          {{ field.label_tag }}
-          {{ field }}
-          {% for error in field.errors %}
-            <span class="error">{{ error }}</span>
-          {% endfor %}
-        </div>
-      {% endfor %}
+      <h2>{% trans "Sign In" %}</h2>
+
       {% if form_login.non_field_errors %}
-        <div class="non-field-errors">
-          {% for error in form_login.non_field_errors %}
-            <span class="error">{{ error }}</span>
-          {% endfor %}
-        </div>
+        <div class="auth-errors">{% for e in form_login.non_field_errors %}<span>{{ e }}</span>{% endfor %}</div>
       {% endif %}
-      <button type="submit" name="login" class="btn btn-primary">
-        {% trans "Login" %}
-      </button>
+
+      <div class="float-field">
+        <input type="text" id="li-identifier" name="identifier" placeholder=" "
+               value="{{ form_login.identifier.value|default:'' }}" required>
+        <label for="li-identifier">{% trans "Email or username" %}</label>
+      </div>
+
+      <div class="float-field has-eye">
+        <input type="password" id="login-pass" name="password" placeholder=" "
+               autocomplete="current-password" required>
+        <label for="login-pass">{% trans "Password" %}</label>
+        <button type="button" class="eye-btn" data-target="login-pass" aria-label="{% trans 'Show password' %}">
+          <svg class="icon icon--sm eye-open" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <svg class="icon icon--sm eye-closed" viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+        </button>
+      </div>
+
+      <a class="forgot-link" href="{% url 'accounts:password_reset' %}">{% trans "Forgot password?" %}</a>
+      <button type="submit" name="login" class="btn-auth">{% trans "Sign In" %}</button>
+      <p class="auth-switch">{% trans "Don't have an account?" %} <a href="?tab=signup">{% trans "Sign Up" %}</a></p>
     </form>
+
   {% else %}
     <form method="post" class="auth-form">
       {% csrf_token %}
       <h2>{% trans "Sign Up" %}</h2>
-      {% for field in form_signup %}
-        <div class="form-field">
-          {{ field.label_tag }}
-          {{ field }}
-          {% for error in field.errors %}
-            <span class="error">{{ error }}</span>
-          {% endfor %}
-        </div>
-      {% endfor %}
+
       {% if form_signup.non_field_errors %}
-        <div class="non-field-errors">
-          {% for error in form_signup.non_field_errors %}
-            <span class="error">{{ error }}</span>
-          {% endfor %}
-        </div>
+        <div class="auth-errors">{% for e in form_signup.non_field_errors %}<span>{{ e }}</span>{% endfor %}</div>
       {% endif %}
-      <button type="submit" name="signup" class="btn btn-primary">
-        {% trans "Sign Up" %}
-      </button>
+
+      <div class="float-field">
+        <input type="text" id="su-name" name="full_name" placeholder=" "
+               value="{{ form_signup.full_name.value|default:'' }}" required>
+        <label for="su-name">{% trans "Full name" %}</label>
+      </div>
+      {% for e in form_signup.full_name.errors %}<span class="field-error">{{ e }}</span>{% endfor %}
+
+      <div class="float-field">
+        <input type="email" id="su-email" name="email" placeholder=" "
+               value="{{ form_signup.email.value|default:'' }}" autocomplete="email" required>
+        <label for="su-email">{% trans "Email" %}</label>
+      </div>
+      {% for e in form_signup.email.errors %}<span class="field-error">{{ e }}</span>{% endfor %}
+
+      <div class="float-field">
+        <input type="text" id="su-user" name="username" placeholder=" "
+               value="{{ form_signup.username.value|default:'' }}" autocomplete="username" required>
+        <label for="su-user">{% trans "Username" %}</label>
+      </div>
+      {% for e in form_signup.username.errors %}<span class="field-error">{{ e }}</span>{% endfor %}
+
+      <div class="float-field has-eye">
+        <input type="password" id="signup-pass1" name="password1" placeholder=" "
+               autocomplete="new-password" required>
+        <label for="signup-pass1">{% trans "Password" %}</label>
+        <button type="button" class="eye-btn" data-target="signup-pass1" aria-label="{% trans 'Show password' %}">
+          <svg class="icon icon--sm eye-open" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <svg class="icon icon--sm eye-closed" viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+        </button>
+      </div>
+      {% for e in form_signup.password1.errors %}<span class="field-error">{{ e }}</span>{% endfor %}
+
+      <div class="float-field has-eye">
+        <input type="password" id="signup-pass2" name="password2" placeholder=" "
+               autocomplete="new-password" required>
+        <label for="signup-pass2">{% trans "Confirm password" %}</label>
+        <button type="button" class="eye-btn" data-target="signup-pass2" aria-label="{% trans 'Show password' %}">
+          <svg class="icon icon--sm eye-open" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <svg class="icon icon--sm eye-closed" viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+        </button>
+      </div>
+      {% for e in form_signup.password2.errors %}<span class="field-error">{{ e }}</span>{% endfor %}
+
+      <button type="submit" name="signup" class="btn-auth">{% trans "Create Account" %}</button>
+      <p class="auth-switch">{% trans "Already have an account?" %} <a href="?tab=login">{% trans "Sign In" %}</a></p>
     </form>
   {% endif %}
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.eye-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var input = document.getElementById(btn.dataset.target);
+        var show = input.type === 'password';
+        input.type = show ? 'text' : 'password';
+        btn.classList.toggle('showing', show);
+      });
+    });
+  });
+</script>
 {% endblock %}

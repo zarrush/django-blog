@@ -1,0 +1,116 @@
+/*
+  auth.css — Sign In / Sign Up pages.
+  Glass card, handwritten tabs, Telegram-style floating labels.
+*/
+
+.auth-container {
+  max-width: 420px;
+  margin: 64px auto;
+  padding: 32px;
+  background: var(--glass);
+  border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: 20px;
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+}
+
+/* Tabs — ONLY place with the handwritten font */
+.auth-tabs { display: flex; border-bottom: 1px solid var(--glass-border); margin-bottom: 28px; }
+.auth-tab {
+  flex: 1;
+  text-align: center;
+  padding: 12px;
+  color: var(--muted);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  font-family: "Caveat", cursive;
+  font-size: 1.35rem;
+  transition: color .2s, border-color .2s;
+}
+.auth-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* Titles — normal font */
+.auth-form h2, .auth-title { color: var(--text); font-size: 1.5rem; font-weight: 700; margin-bottom: 20px; }
+.auth-hint { color: var(--muted); font-size: .9rem; line-height: 1.6; margin-bottom: 20px; }
+
+/* Floating label fields (Telegram style) */
+.float-field { position: relative; margin-bottom: 18px; }
+.float-field input {
+  width: 100%;
+  padding: 13px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, .04);
+  color: var(--text);
+  outline: none;
+  font-family: inherit;
+  font-size: .95rem;
+  transition: border-color .2s;
+}
+.float-field input:focus { border-color: var(--accent); }
+.float-field label {
+  position: absolute;
+  inset-inline-start: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  font-size: .95rem;
+  pointer-events: none;
+  padding: 0 6px;
+  border-radius: 4px;
+  transition: top .18s ease, font-size .18s ease, color .18s ease, background-color .18s ease;
+}
+.float-field input:focus + label,
+.float-field input:not(:placeholder-shown) + label {
+  top: 0;
+  font-size: .72rem;
+  color: var(--accent);
+  background: var(--label-bg);
+}
+.float-field.has-eye input { padding-inline-end: 44px; }
+
+/* Eye toggle */
+.eye-btn {
+  position: absolute;
+  inset-inline-end: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+}
+.eye-btn:hover { color: var(--text); }
+.eye-btn .eye-closed { display: none; }
+.eye-btn.showing .eye-closed { display: block; }
+.eye-btn.showing .eye-open { display: none; }
+
+.forgot-link {
+  display: block;
+  text-align: end;
+  font-size: .85rem;
+  color: var(--muted);
+  text-decoration: none;
+  margin: -6px 0 16px;
+}
+.forgot-link:hover { color: var(--accent); }
+
+.btn-auth {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: opacity .2s;
+}
+.btn-auth:hover { opacity: .9; }
+
+.auth-switch { text-align: center; color: var(--muted); font-size: .9rem; margin-top: 16px; }
+.auth-switch a { color: var(--accent); text-decoration: none; }
+.auth-switch a:hover { text-decoration: underline; }
+
+.field-error, .auth-errors span { display: block; color: #ff6b6b; font-size: .8rem; margin: -8px 0 12px; }

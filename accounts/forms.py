@@ -1,13 +1,19 @@
-"""Authentication forms: signup with full name, login with username + email + password."""
+"""Authentication forms: Sign In (identifier+pass), Sign Up (full name first)."""
 from django import forms
+from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
 from .models import User
 
 
 class SignupForm(forms.ModelForm):
-    """Registration: username, email, full name and password."""
+    """Registration: full name, email, username, password x2."""
 
+    full_name = forms.CharField(
+        label=_("Full name"),
+        max_length=150,
+        widget=forms.TextInput(attrs={"autocomplete": "name"}),
+    )
     password1 = forms.CharField(
         label=_("Password"),
         widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
@@ -19,14 +25,13 @@ class SignupForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ("username", "email", "first_name", "last_name")
+        fields = ("email", "username")
         widgets = {
-            "username": forms.TextInput(attrs={"autocomplete": "username"}),
             "email": forms.EmailInput(attrs={"autocomplete": "email"}),
+            "username": forms.TextInput(attrs={"autocomplete": "username"}),
         }
 
-    # ترتیب نمایش فیلدها (پسوردها آخر)
-    field_order = ("username", "email", "first_name", "last_name", "password1", "password2")
+    field_order = ("full_name", "email", "username", "password1", "password2")
 
     def clean_email(self):
         email = self.cleaned_data.get("email")
@@ -45,21 +50,20 @@ class SignupForm(forms.ModelForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data["password1"])
+        parts = self.cleaned_data["full_name"].split()
+        user.first_name = parts[0] if parts else ""
+        user.last_name = " ".join(parts[1:]) if len(parts) > 1 else ""
         if commit:
             user.save()
         return user
 
 
 class LoginForm(forms.Form):
-    """Login requires all three: username + email + password."""
+    """Sign in with email OR username + password."""
 
-    username = forms.CharField(
-        label=_("Username"),
-        widget=forms.TextInput(attrs={"autofocus": True, "autocomplete": "username"}),
-    )
-    email = forms.EmailField(
-        label=_("Email"),
-        widget=forms.EmailInput(attrs={"autocomplete": "email"}),
+    identifier = forms.CharField(
+        label=_("Email or username"),
+        widget=forms.TextInput(attrs={"autofocus": True}),
     )
     password = forms.CharField(
         label=_("Password"),
@@ -68,17 +72,16 @@ class LoginForm(forms.Form):
 
     def clean(self):
         cleaned = super().clean()
-        username = cleaned.get("username")
-        email = cleaned.get("email")
+        ident = (cleaned.get("identifier") or "").strip()
         password = cleaned.get("password")
-        if not (username and email and password):
+        if not ident or not password:
             return cleaned
         try:
-            user = User.objects.get(username__iexact=username, email__iexact=email)
+            user = User.objects.get(Q(username__iexact=ident) | Q(email__iexact=ident))
         except User.DoesNotExist:
-            raise forms.ValidationError(_("Invalid username, email or password."))
+            raise forms.ValidationError(_("Invalid credentials."))
         if not user.check_password(password):
-            raise forms.ValidationError(_("Invalid username, email or password."))
+            raise forms.ValidationError(_("Invalid credentials."))
         self.user = user
         return cleaned
 
