@@ -16,8 +16,12 @@ SECRET_KEY = os.environ.get(
     'DJANGO_SECRET_KEY',
     'django-insecure-%=6-+r=e=nk775_dv!w&v(3oh=i^-j#1mqdtd09qd*@_47#lzk',
 )
-DEBUG = os.environ.get('DJANGO_DEBUG', '1') == '1'
-ALLOWED_HOSTS = []
+DEBUG = True
+
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
+]
 
 # Application definition
 INSTALLED_APPS = [
@@ -115,7 +119,11 @@ USE_I18N = True
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
-STATIC_URL = 'static/'
+STATIC_URL = "static/"
+
+STATICFILES_DIRS = [
+    BASE_DIR / "blog" / "static",
+]
 # Will be enabled in the UI phase when global static assets are added:
 # STATICFILES_DIRS = [BASE_DIR / 'static']
 

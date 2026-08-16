@@ -39,6 +39,7 @@ urlpatterns = [
         ),
         name="robots",
     ),
+    
 ]
 
 urlpatterns += i18n_patterns(

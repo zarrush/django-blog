@@ -1,13 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Bad Request</title>
-</head>
-<body>
-    <h1>400 — Bad Request</h1>
-    <p>Your request was invalid.</p>
-    <a href="{% url 'blog:post_list' %}">Back to Home</a>
-</body>
-</html>
+{% extends "blog/base.html" %}
+{% load i18n %}
+
+{% block title %}400{% endblock %}
+
+{% block content %}
+<div class="error-wrap">
+  <div class="glass-card error-card">
+    <p class="error-code">400</p>
+    <h1>{% trans "Bad request" %}</h1>
+    <p class="error-text">{% trans "We couldn't understand that request. A fresh start usually helps." %}</p>
+    <a href="{% url 'pages:home' %}" class="btn-auth error-btn">{% trans "Back to home" %}</a>
+  </div>
+</div>
+{% endblock %}

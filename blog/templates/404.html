@@ -1,13 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Page Not Found</title>
-</head>
-<body>
-    <h1>404 — Page Not Found</h1>
-    <p>The page you're looking for doesn't exist.</p>
-    <a href="{% url 'blog:post_list' %}">Back to Home</a>
-</body>
-</html>
+{% extends "blog/base.html" %}
+{% load i18n %}
+
+{% block title %}404{% endblock %}
+
+{% block content %}
+<div class="error-wrap">
+  <div class="glass-card error-card">
+    <p class="error-code">404</p>
+    <h1>{% trans "Page not found" %}</h1>
+    <p class="error-text">{% trans "The page you're looking for drifted away like a blob in space." %}</p>
+    <a href="{% url 'pages:home' %}" class="btn-auth error-btn">{% trans "Back to home" %}</a>
+  </div>
+</div>
+{% endblock %}
