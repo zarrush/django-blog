@@ -15,7 +15,7 @@
           <li>
             <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
             <small>— {{ post.publish|date:"M j, Y" }} by
-              <a href="{% url 'blog:author_page' post.author.username %}">{{ post.author.username }}</a>
+              <a href="{% url 'blog:author_detail' post.author.username %}">{{ post.author.username }}</a>
             </small>
           </li>
         {% endfor %}

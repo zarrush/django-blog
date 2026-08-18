@@ -18,10 +18,11 @@
 }
 [data-theme="light"] .site-header { background: rgba(255, 255, 255, .55); }
 
+
 .header-inner {
   position: relative;
-  max-width: 1200px;
-  margin: 0 auto;
+  max-width: 100%;
+  margin: 0;
   padding: 14px 32px;
   display: flex;
   align-items: center;
@@ -207,9 +208,10 @@
 .site-footer { margin-top: 96px; }
 
 .footer-inner {
-  max-width: 1040px;          /* باریک‌تر از قبل */
+  max-width: var(--container);
   margin: 0 auto;
-  padding: 0 32px;
+  padding: 0 var(--container-pad);
+  padding: 14px var(--container-pad);
   display: grid;
   grid-template-columns: 1.2fr .8fr;
   gap: 24px;

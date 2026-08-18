@@ -70,9 +70,9 @@ html[dir="rtl"] .hero-title .script {
 
 /* ---------- Blog list page ---------- */
 .blog-toolbar {
-  max-width: 1040px;
+  max-width: var(--container);
   margin: 48px auto 28px;
-  padding: 0 24px;
+  padding: 0 var(--container-pad);
   display: flex;
   align-items: center;
   gap: 14px;
@@ -127,8 +127,8 @@ html[dir="rtl"] .hero-title .script {
 
 .blog-grid {
   width: auto;
-  max-width: 1040px;
-  padding: 0 24px;
+  max-width: var(--container);
+  padding: 0 var(--container-pad);
   margin: 0 auto 40px;
 }
 .card-date { color: var(--muted); font-size: .78rem; margin: -6px 0 12px; }
@@ -171,3 +171,205 @@ html[dir="rtl"] .hero-title .script {
   margin: -4px 0 12px;
 }
 .card-author { color: var(--accent); font-weight: 600; }
+/* ---------- About page ---------- */
+/* Hero inside glass card */
+
+.about-section {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 48px var(--container-pad);
+}
+.about-hero {
+  display: grid;
+  grid-template-columns: 1.2fr .8fr;
+  gap: 40px;
+  align-items: center;
+  padding: 48px 40px;
+  margin-top: 40px;
+}
+
+/* Eyebrow labels (ABOUT US / OUR STORY) */
+.eyebrow {
+  display: inline-block;
+  color: var(--accent);
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+/* Hero — compact, reference style */
+.about-hero {
+  display: grid;
+  grid-template-columns: 1.1fr .9fr;
+  gap: 40px;
+  align-items: center;
+  padding: 56px 48px;
+  margin-top: 40px;
+}
+.about-hero-text { text-align: start; }
+.about-hero h1 {
+  text-align: start;
+  font-size: clamp(2rem, 4.5vw, 2.8rem);
+  margin-bottom: 14px;
+}
+.about-hero p {
+  text-align: start;
+  max-width: 480px;
+  margin-bottom: 24px;
+}
+.about-hero-logo { position: relative; display: flex; justify-content: center; }
+.about-hero-logo::before {
+  content: "";
+  position: absolute;
+  inset: 5%;
+  background: radial-gradient(circle, rgba(31, 127, 214, .28), transparent 70%);
+  border-radius: 50%;
+}
+.about-hero-logo img {
+  position: relative;
+  width: 220px;
+  filter: drop-shadow(0 0 32px rgba(31, 127, 214, .55));
+}
+
+/* Our Story — text + photo */
+.story-grid {
+  display: grid;
+  grid-template-columns: .9fr 1.1fr;
+  gap: 40px;
+  align-items: center;
+}
+.story-text { text-align: start; }
+.story-text h2 { text-align: start; font-size: 1.6rem; margin-bottom: 16px; }
+.story-text p { text-align: start; margin-bottom: 12px; }
+.story-visual {
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+}
+.story-visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 20px;
+}
+.share-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 28px; }
+.values-grid { grid-template-columns: repeat(3, 1fr); }
+.share-card { text-align: center; padding: 28px 20px; }
+.share-card .icon { color: var(--accent); width: 30px; height: 30px; margin-bottom: 14px; }
+.share-card h3 { color: var(--text); font-size: 1.05rem; margin-bottom: 8px; }
+.share-card p { font-size: .88rem; }
+
+.mission { text-align: center; }
+.mission-text {
+  font-size: clamp(1.3rem, 3vw, 1.9rem);
+  color: var(--text);
+  max-width: 700px;
+  margin: 8px auto 0;
+  line-height: 1.6;
+}
+
+/* Team */
+.team-grid {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 26px;
+  flex-wrap: wrap;
+  margin-top: 40px;
+}
+.team-card { text-align: center; max-width: 170px; transition: transform .25s; }
+.team-card:hover { transform: translateY(-6px); }
+.team-photo {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 24px;               /* مربع با خمیدگی، نه دایره */
+  border: 2px solid var(--glass-border);
+  transition: transform .25s, border-color .25s, box-shadow .25s;
+}
+.team-card:hover .team-photo {
+  transform: scale(1.06);
+  border-color: var(--accent);
+  box-shadow: 0 8px 28px rgba(31, 127, 214, .25);
+}
+.team-card--owner { transform: translateY(-16px); }   /* مالک بالاتر */
+.team-card--owner:hover { transform: translateY(-22px); }
+.team-card--owner .team-photo { width: 150px; height: 150px; }
+.team-card h3 { color: var(--text); font-size: 1rem; margin-top: 14px; }
+.team-role { display: block; color: var(--accent); font-size: .78rem; font-weight: 600; margin-top: 4px; }
+.team-line { display: block; color: var(--muted); font-size: .8rem; line-height: 1.6; margin-top: 8px; text-decoration: none; }
+.team-line:hover { color: var(--text); }
+.team-cta { text-align: center; margin-top: 36px; }
+.team-cta a { color: var(--accent); text-decoration: none; font-size: .95rem; }
+.team-cta a:hover { text-decoration: underline; }
+
+/* CTA — horizontal glass card */
+.about-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 32px 40px;
+  flex-wrap: wrap;
+}
+.cta-text h2 { font-size: 1.4rem; margin: 0 0 6px; color: var(--text); }
+.cta-text p { margin: 0; font-size: .92rem; }
+.cta-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: 10px;
+  font-size: .9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity .2s, border-color .2s, color .2s;
+}
+.cta-btn--solid { background: var(--accent); color: #fff; }
+.cta-btn--solid:hover { opacity: .9; }
+.cta-btn--ghost { border: 1px solid var(--glass-border); color: var(--text); }
+.cta-btn--ghost:hover { border-color: var(--accent); color: var(--accent); }
+html[dir="rtl"] .cta-arrow { transform: scaleX(-1); }
+
+/* Font sizes — balanced */
+.about-hero h1 { font-size: clamp(1.8rem, 4vw, 2.4rem); }
+.about-section h2 { font-size: 1.5rem; }
+.mission-text { font-size: clamp(1.1rem, 2.5vw, 1.5rem); }
+
+@media (max-width: 900px) {
+  .about-hero, .story-grid { grid-template-columns: 1fr; }
+  .about-hero { padding: 40px 28px; }
+}
+/* Our Story inside a glass card */
+.story-card { padding: 44px; }
+.story-card .story-grid { gap: 36px; }
+.story-visual { border: none; background: none; }
+/* Team name link */
+.team-name { color: var(--text); text-decoration: none; transition: color .2s; }
+.team-name:hover { color: var(--accent); }
+
+/* Author page */
+.author-card {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  padding: 40px;
+  flex-wrap: wrap;
+}
+.author-avatar {
+  width: 140px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 28px;
+  border: 2px solid var(--glass-border);
+  filter: grayscale(1);
+}
+.author-info h1 { color: var(--text); font-size: 1.7rem; margin-bottom: 8px; }
+.author-bio { margin-top: 14px; line-height: 1.8; }
+.author-socials { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+.author-posts-title { margin: 48px 0 24px; }

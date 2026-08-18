@@ -199,17 +199,8 @@ def post_archive(request):
     return render(request, 'blog/post/archive.html', {'archive': archive})
 
 
-def author_page(request, author_id):
-    """Display all posts by a specific author."""
-    author = get_object_or_404(User, id=author_id)
-    posts = (
-        Post.published.filter(author=author)
-        .select_related('author')
-        .prefetch_related('tags', 'categories')
-    )
-    paginator = Paginator(posts, 10)
-    page_obj = paginator.get_page(request.GET.get('page'))
-
-    return render(request, 'blog/post/author.html', {
-        'author': author, 'posts': page_obj,
-    })
+def author_detail(request, username):
+    """Public author page: profile + their published posts."""
+    author = get_object_or_404(User, username=username)
+    posts = Post.published.filter(author=author)
+    return render(request, "blog/author.html", {"author": author, "posts": posts})

@@ -24,7 +24,7 @@
 
     <p class="date">
       {% trans "Published" %} {{ post.publish|date:"M j, Y" }} {% trans "by" %}
-      <a href="{% url 'blog:author_page' post.author.id %}">
+      <a href="{% url 'blog:author_page' post.author.username %}">
         {{ post.author.username|default:post.author.email }}
       </a>
     </p>

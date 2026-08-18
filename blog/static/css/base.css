@@ -9,7 +9,7 @@
   margin: 0;
   box-sizing: border-box;
 }
-
+*, *::before, *::after { box-sizing: border-box; }
 body {
   background: transparent; /* let the ambient bg-scene show through */
   color: var(--text);
