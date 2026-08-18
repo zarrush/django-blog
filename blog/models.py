@@ -74,6 +74,9 @@ class Post(models.Model):
     objects = models.Manager()
     published = PublishedManager()
 
+    helpful_yes = models.PositiveIntegerField(default=0)
+    helpful_no = models.PositiveIntegerField(default=0)
+
     class Meta:
         ordering = ['-publish']
         indexes = [

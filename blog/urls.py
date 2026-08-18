@@ -17,6 +17,9 @@ urlpatterns = [
     # Post actions
     path('<int:post_id>/like/', views.post_like, name='post_like'),
     path('<int:post_id>/', views.post_comment, name='post_comment'),
+    path('<int:post_id>/like/', views.post_like, name='post_like'),
+    path('<int:post_id>/feedback/', views.post_feedback, name='post_feedback'),
+    path('<int:post_id>/', views.post_comment, name='post_comment'),
     # Post detail (most specific pattern stays last)
     path(
         '<int:year>/<int:month>/<int:day>/<slug:post>/',

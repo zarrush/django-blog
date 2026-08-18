@@ -1,96 +1,288 @@
 {% extends "blog/base.html" %}
-{% load blog_tags i18n %}
+{% load static i18n %}
 
 {% block title %}{{ post.title }}{% endblock %}
-{% block meta_description %}{{ post.excerpt|default:post.body|striptags|truncatewords:30 }}{% endblock %}
-{% block og_title %}{{ post.title }}{% endblock %}
-{% block og_description %}{{ post.excerpt|default:post.body|striptags|truncatewords:30 }}{% endblock %}
-{% block og_type %}article{% endblock %}
-{% block og_image %}
-  {% if post.featured_image %}
-    <meta property="og:image" content="{{ request.build_absolute_uri }}{{ post.featured_image.url }}">
-  {% endif %}
-{% endblock %}
 
 {% block content %}
-  <article class="post-detail">
+<article class="post-detail">
+
+  <!-- 2) Hero -->
+  <header class="post-hero">
+    <div class="post-hero-badges">
+      {% for cat in post.categories.all %}
+        <span class="card-badge card-badge--static">{{ cat.name }}</span>
+      {% endfor %}
+    </div>
     <h1>{{ post.title }}</h1>
+    <p class="post-lead">{{ post.body|truncatewords:28 }}</p>
 
-    <p class="categories">
-      {% for category in post.categories.all %}
-        <a href="{{ category.get_absolute_url }}" class="badge">{{ category.name }}</a>
-      {% endfor %}
-    </p>
-
-    <p class="date">
-      {% trans "Published" %} {{ post.publish|date:"M j, Y" }} {% trans "by" %}
-      <a href="{% url 'blog:author_page' post.author.username %}">
-        {{ post.author.username|default:post.author.email }}
+    <div class="post-hero-meta">
+      <a class="author-chip" href="{% url 'blog:author_page' post.author.username %}">
+        {% if post.author.profile.avatar %}
+          <img src="{{ post.author.profile.avatar.url }}" alt="">
+        {% else %}
+          <span class="avatar-fallback">{{ post.author.email|first|upper }}</span>
+        {% endif %}
+        <span class="author-chip-text">
+          <strong>{{ post.author.display_name }}</strong>
+          <small>@{{ post.author.username }}</small>
+        </span>
       </a>
-    </p>
+      <span class="meta-item">
+        <svg class="icon icon--sm" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        {{ post.publish|date:"M d, Y" }}
+      </span>
+      <span class="meta-item">
+        <svg class="icon icon--sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        {% blocktrans count counter=reading_time %}{{ counter }} min read{% plural %}{{ counter }} min read{% endblocktrans %}
+      </span>
+      <span class="meta-item">
+        <svg class="icon icon--sm" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        {{ comments|length }} {% trans "comments" %}
+      </span>
+    </div>
 
-    <p class="reading-time">{{ post.body|reading_time }}</p>
-
-    <div class="body">{{ post.body|linebreaks }}</div>
-
-    <p class="tags">
-      {% trans "Tags" %}:
-      {% for tag in post.tags.all %}
-        <a href="{% url 'blog:post_list_by_tag' tag.slug %}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
-      {% endfor %}
-    </p>
-
-    {% if user.is_authenticated %}
+    <div class="post-hero-actions">
       <form method="post" action="{% url 'blog:post_like' post.id %}" class="like-form">
         {% csrf_token %}
-        <button type="submit">
-          {% if liked %}{% trans "Unlike" %}{% else %}{% trans "Like" %}{% endif %}
+        <button type="submit" class="action-chip action-chip--like">
+          <svg class="icon icon--sm" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          {{ post.likes.count }}
         </button>
       </form>
-    {% endif %}
-  </article>
+      <button type="button" class="action-chip" id="copy-link-top">
+        <svg class="icon icon--sm" viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+        {% trans "Share" %}
+      </button>
+      <button type="button" class="action-chip" id="bookmark-btn" aria-label="{% trans 'Save' %}">
+        <svg class="icon icon--sm" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+      </button>
+    </div>
+  </header>
 
-  {% if similar_posts %}
-    <section class="similar-posts">
-      <h2>{% trans "Similar posts" %}</h2>
-      {% for p in similar_posts %}
-        <p><a href="{{ p.get_absolute_url }}">{{ p.title }}</a></p>
-      {% endfor %}
-    </section>
+  <!-- 3) Featured image -->
+  {% if post.featured_image %}
+    <figure class="post-figure">
+      <img src="{{ post.featured_image.url }}" alt="{{ post.title }}">
+    </figure>
   {% endif %}
 
-  {% if related_posts %}
-    <section class="related-posts">
-      <h2>{% trans "Related posts" %}</h2>
-      {% for p in related_posts %}
-        <p><a href="{{ p.get_absolute_url }}">{{ p.title }}</a></p>
+  <!-- 4) Three-column body -->
+  <div class="post-layout">
+
+    <aside class="share-rail">
+      <span class="rail-label">{% trans "Share" %}</span>
+      <form method="post" action="{% url 'blog:post_like' post.id %}">
+        {% csrf_token %}
+        <button type="submit" class="rail-btn" aria-label="Like">
+          <svg class="icon icon--sm" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </button>
+      </form>
+      <a class="rail-btn" target="_blank" rel="noopener"
+         href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri|urlencode }}&text={{ post.title|urlencode }}"
+         aria-label="Share on X">
+        <svg class="icon icon--sm" viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>
+      </a>
+      <a class="rail-btn" target="_blank" rel="noopener"
+         href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri|urlencode }}"
+         aria-label="Share on LinkedIn">
+        <svg class="icon icon--sm" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4V9h4v1.5A6 6 0 0 1 16 8z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+      </a>
+      <button type="button" class="rail-btn" id="copy-link" aria-label="{% trans 'Copy link' %}">
+        <svg class="icon icon--sm" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+      </button>
+    </aside>
+
+    <div class="post-body">
+      {{ post.body|linebreaks }}
+    </div>
+
+    <aside class="toc-rail">
+      <nav class="toc glass-card" id="toc">
+        <h4>{% trans "On this page" %}</h4>
+        <ul></ul>
+      </nav>
+    </aside>
+  </div>
+
+  <!-- 5) Tags -->
+  {% if post.tags.all %}
+    <div class="post-tags">
+      <span class="rail-label">{% trans "Tags:" %}</span>
+      {% for tag in post.tags.all %}
+        <a class="tag-pill" href="{% url 'blog:post_list_by_tag' tag.slug %}">#{{ tag.name }}</a>
       {% endfor %}
-    </section>
+    </div>
   {% endif %}
 
-  <section class="comments">
-    <h2>{% trans "Comments" %}</h2>
-    {% for comment in comments %}
-      <div class="comment">
-        <p><strong>{{ comment.name }}</strong> ({{ comment.created|date:"M j, Y" }})</p>
-        <p>{{ comment.body|linebreaks }}</p>
-      </div>
-    {% empty %}
-      <p>{% trans "No comments yet." %}</p>
-    {% endfor %}
-
-    <h3>{% trans "Add a comment" %}</h3>
-    <form method="post" action="{% url 'blog:post_comment' post.id %}" class="auth-form">
+  <!-- 6) Feedback -->
+  <div class="glass-card feedback-bar">
+    <span>{% trans "Did you find this article helpful?" %}</span>
+    <form method="post" action="{% url 'blog:post_feedback' post.id %}" class="feedback-form">
       {% csrf_token %}
-      {{ form.website }}
-      {% for field in form.visible_fields %}
-        <div class="form-field">
-          {{ field.label_tag }}
-          {{ field }}
-          {% for error in field.errors %}<span class="error">{{ error }}</span>{% endfor %}
+      <button type="submit" name="value" value="yes" class="feedback-btn feedback-yes">
+        <svg class="icon icon--sm" viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+        {% trans "Yes" %} · {{ post.helpful_yes }}
+      </button>
+      <button type="submit" name="value" value="no" class="feedback-btn feedback-no">
+        <svg class="icon icon--sm" viewBox="0 0 24 24"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/></svg>
+        {% trans "Not really" %} · {{ post.helpful_no }}
+      </button>
+    </form>
+  </div>
+
+  <!-- 7) Author card -->
+  <section class="glass-card author-box">
+    {% if post.author.profile.avatar %}
+      <img class="author-box-avatar" src="{{ post.author.profile.avatar.url }}" alt="">
+    {% else %}
+      <span class="author-box-avatar avatar-fallback">{{ post.author.email|first|upper }}</span>
+    {% endif %}
+    <div class="author-box-info">
+      <h3>{{ post.author.display_name }} <span class="role-badge role-author">{% trans "Author" %}</span></h3>
+      <p>{{ post.author.profile.bio|default:"Writer at Zevora — sharing ideas, one post at a time." }}</p>
+    </div>
+    <a class="cta-btn cta-btn--solid" href="{% url 'blog:author_page' post.author.username %}">
+      {% trans "View full profile" %}
+      <svg class="icon icon--sm cta-arrow" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </a>
+  </section>
+
+  <!-- 8) Related -->
+  {% if related %}
+    <section class="related">
+      <div class="related-head">
+        <h2>{% trans "You might also like" %}</h2>
+        <a href="{% url 'blog:post_list' %}">{% trans "View all posts" %} →</a>
+      </div>
+      <div class="post-grid blog-grid related-grid">
+        {% for rp in related %}
+          <article class="post-card">
+            <div class="card-media">
+              {% if rp.featured_image %}
+                <img src="{{ rp.featured_image.url }}" alt="{{ rp.title }}" class="post-image">
+              {% else %}
+                <div class="post-image post-image--empty"></div>
+              {% endif %}
+            </div>
+            <div class="post-content">
+              <h3><a href="{{ rp.get_absolute_url }}">{{ rp.title }}</a></h3>
+              <p class="card-meta"><span>{{ rp.publish|date:"M d, Y" }}</span></p>
+              <a href="{{ rp.get_absolute_url }}" class="read-btn">{% trans "Read" %}</a>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+
+  <!-- 9) Comments -->
+  <section class="comments">
+    <div class="comments-head">
+      <h2>{% trans "Comments" %} ({{ comments|length }})</h2>
+      <div class="sort-links">
+        <a href="?sort=newest" class="{% if sort != 'oldest' %}active{% endif %}">{% trans "Newest" %}</a>
+        <a href="?sort=oldest" class="{% if sort == 'oldest' %}active{% endif %}">{% trans "Oldest" %}</a>
+      </div>
+    </div>
+
+    <div class="comments-grid">
+      <form method="post" action="{% url 'blog:post_comment' post.id %}" class="glass-card comment-form">
+        {% csrf_token %}
+        <div class="hp-field" aria-hidden="true">
+          <label>{% trans "Leave this field empty" %}</label>
+          <input type="text" name="website" tabindex="-1" autocomplete="off">
         </div>
-      {% endfor %}
-      <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
+        {% if not user.is_authenticated %}
+          <div class="comment-form-row">
+            <input type="text" name="name" placeholder="{% trans 'Your name' %}" required>
+            <input type="email" name="email" placeholder="{% trans 'Your email' %}" required>
+          </div>
+        {% endif %}
+        <textarea name="body" rows="4" placeholder="{% trans 'Write your comment…' %}" required></textarea>
+        <button type="submit" class="cta-btn cta-btn--solid">{% trans "Post Comment" %}</button>
+      </form>
+
+      <div class="comment-list">
+        {% for comment in comments %}
+          <div class="comment-item">
+            {% if comment.author and comment.author.profile.avatar %}
+              <img class="comment-avatar" src="{{ comment.author.profile.avatar.url }}" alt="">
+            {% else %}
+              <span class="comment-avatar avatar-fallback">{{ comment.name|default:comment.author.email|first|upper }}</span>
+            {% endif %}
+            <div class="comment-body">
+              <div class="comment-meta">
+                <strong>{% firstof comment.author.display_name comment.name %}</strong>
+                <small>{{ comment.created|date:"M d, Y" }}</small>
+              </div>
+              <p>{{ comment.body|linebreaksbr }}</p>
+            </div>
+          </div>
+        {% empty %}
+          <p class="empty">{% trans "No comments yet — be the first!" %}</p>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- 10) Newsletter banner -->
+  <section class="newsletter-banner">
+    <div class="newsletter-text">
+      <h3>{% trans "Stay up to date" %} 🚀</h3>
+      <p>{% trans "Get the latest articles delivered to your inbox." %}</p>
+    </div>
+    <form class="newsletter-form" action="" method="get">
+      <input type="email" name="email" placeholder="{% trans 'Your email address' %}" required>
+      <button type="submit" class="cta-btn cta-btn--dark">{% trans "Subscribe" %}</button>
     </form>
   </section>
+
+</article>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  /* TOC builder */
+  var body = document.querySelector('.post-body');
+  var toc = document.getElementById('toc');
+  if (body && toc) {
+    var heads = body.querySelectorAll('h2, h3');
+    if (heads.length) {
+      heads.forEach(function (h, i) {
+        h.id = 'sec-' + i;
+        var li = document.createElement('li');
+        if (h.tagName === 'H3') li.className = 'toc-h3';
+        var a = document.createElement('a');
+        a.href = '#sec-' + i;
+        a.textContent = h.textContent;
+        li.appendChild(a);
+        toc.querySelector('ul').appendChild(li);
+      });
+    } else {
+      toc.style.display = 'none';
+    }
+  }
+
+  /* Copy link (both buttons) */
+  ['copy-link', 'copy-link-top'].forEach(function (id) {
+    var btn = document.getElementById(id);
+    if (btn) btn.addEventListener('click', function () {
+      navigator.clipboard.writeText(window.location.href);
+      btn.classList.add('copied');
+      setTimeout(function () { btn.classList.remove('copied'); }, 1200);
+    });
+  });
+
+  /* Bookmark (localStorage) */
+  var bm = document.getElementById('bookmark-btn');
+  if (bm) {
+    var key = 'zevora_bm_{{ post.id }}';
+    if (localStorage.getItem(key)) bm.classList.add('active');
+    bm.addEventListener('click', function () {
+      bm.classList.toggle('active');
+      localStorage.getItem(key) ? localStorage.removeItem(key) : localStorage.setItem(key, '1');
+    });
+  }
+});
+</script>
 {% endblock %}

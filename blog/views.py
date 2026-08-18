@@ -17,7 +17,7 @@ from django.views.decorators.http import require_POST
 from taggit.models import Tag
 
 from .forms import CommentForm, SearchForm
-from .models import Category, Like, Post
+from .models import Category, Like, Post, Comment
 
 User = get_user_model()
 
@@ -76,38 +76,33 @@ def post_list(request):
 
 
 def post_detail(request, year, month, day, post):
-    """Show a published post with comments, similar and related posts."""
+    """Post page: hero, body, TOC data, author, related, comments."""
     post = get_object_or_404(
-        Post.published.select_related('author').prefetch_related('tags', 'categories'),
-        status=Post.Status.PUBLISHED,
-        slug=post,
-        publish__year=year,
-        publish__month=month,
-        publish__day=day,
+        Post, slug=post, status=Post.Status.PUBLISHED,
+        publish__year=year, publish__month=month, publish__day=day,
     )
-    comments = post.comments.filter(active=True)
-    form = CommentForm()
 
-    post_tag_ids = post.tags.values_list('id', flat=True)
-    similar_posts = (
-        Post.published.filter(tags__in=post_tag_ids)
-        .exclude(id=post.id)
-        .annotate(same_tags=Count('tags'))
-        .order_by('-same_tags', '-publish')
-        .select_related('author')[:SIMILAR_POSTS_LIMIT]
-    )
-    related_posts = (
-        Post.published.filter(categories__in=post.categories.all())
-        .exclude(id=post.id)
-        .order_by('-publish')
-        .select_related('author')[:RELATED_POSTS_LIMIT]
-    )
-    liked = request.user.is_authenticated and post.likes.filter(user=request.user).exists()
+    comments = post.comments.all()
+    if hasattr(Comment, "active"):
+        comments = comments.filter(active=True)
+    sort = request.GET.get("sort", "newest")
+    comments = comments.order_by("created" if sort == "oldest" else "-created")
 
-    return render(request, 'blog/post/detail.html', {
-        'post': post, 'comments': comments, 'form': form,
-        'similar_posts': similar_posts, 'related_posts': related_posts,
-        'liked': liked,
+    related = (
+        Post.published
+        .filter(categories__in=post.categories.all())
+        .exclude(id=post.id)
+        .distinct()[:3]
+    )
+
+    reading_time = max(1, round(len(post.body.split()) / 200))
+
+    return render(request, "blog/post/detail.html", {
+        "post": post,
+        "comments": comments,
+        "sort": sort,
+        "related": related,
+        "reading_time": reading_time,
     })
 
 
@@ -124,33 +119,25 @@ def post_like(request, post_id):
 
 @require_POST
 def post_comment(request, post_id):
-    """Handle a new comment with honeypot + rate-limit + moderation."""
+    """Create a comment (authenticated or guest) and redirect back."""
     post = get_object_or_404(Post, id=post_id, status=Post.Status.PUBLISHED)
-    form = CommentForm(data=request.POST)
-
-    if form.is_valid():
-        # Honeypot: bots fill it, humans never see it.
-        if form.cleaned_data.get("website"):
-            return redirect(post.get_absolute_url())
-
-        # Rate limit per IP.
-        key = f"comment-rate:{get_client_ip(request)}"
-        attempts = cache.get(key, 0)
-        if attempts >= COMMENTS_PER_HOUR:
-            return redirect(post.get_absolute_url())
-
-        comment = form.save(commit=False)
-        comment.post = post
-        # Simple moderation: many links => hold for review.
-        if comment.body.lower().count("http") >= 3:
-            comment.active = False
-        comment.save()
-        cache.set(key, attempts + 1, 3600)
-
-        return render(request, 'blog/post/comment.html', {
-            'post': post, 'form': form, 'comment': comment,
-        })
-
+    if request.method == "POST":
+        body = request.POST.get("body", "").strip()
+        honeypot = request.POST.get("website", "")
+        if body and not honeypot:
+            if request.user.is_authenticated:
+                    Comment.objects.create(post=post, author=request.user, body=body)
+            else:
+                name = request.POST.get("name", "").strip()
+                email = request.POST.get("email", "").strip()
+                if name and email:
+                    Comment.objects.create(post=post, name=name, email=email, body=body)
+                else:
+                    messages.error(request, "Name and email are required.")
+                    return redirect(post.get_absolute_url())
+            messages.success(request, "Your comment has been published.")
+        else:
+            messages.error(request, "Comment could not be submitted.")
     return redirect(post.get_absolute_url())
 
 
@@ -204,3 +191,17 @@ def author_detail(request, username):
     author = get_object_or_404(User, username=username)
     posts = Post.published.filter(author=author)
     return render(request, "blog/author.html", {"author": author, "posts": posts})
+
+def post_feedback(request, post_id):
+    """One helpful-vote per session."""
+    post = get_object_or_404(Post, id=post_id, status=Post.Status.PUBLISHED)
+    key = f"feedback_{post.id}"
+    if request.method == "POST" and not request.session.get(key):
+        value = request.POST.get("value")
+        if value == "yes":
+            Post.objects.filter(id=post.id).update(helpful_yes=F("helpful_yes") + 1)
+        elif value == "no":
+            Post.objects.filter(id=post.id).update(helpful_no=F("helpful_no") + 1)
+        request.session[key] = value
+        messages.success(request, "Thanks for your feedback!")
+    return redirect(post.get_absolute_url())
